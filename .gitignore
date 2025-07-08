@@ -2,3 +2,5 @@
 .DS_Store
 .env
 storage/private/*
+TODO.md
+vendor

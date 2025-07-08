@@ -1,2 +1,8 @@
 {
+    "autoload": {
+        "psr-4": {
+            "TetherPHP\\": "tetherphp",
+            "Action\\": "app/Action"
+        }
+    }
 }
