@@ -21,7 +21,7 @@ class Kernel {
             return '404';
         }
 
-        $invokeAction = new $action();
+        $invokeAction = new $action($this->request);
         return $invokeAction();
     }
 }
