@@ -2,23 +2,21 @@
 
 namespace Action\HomePage;
 
+use Responder\HomePage\ShowHomePageResponder;
 use TetherPHP\Core\Requests\Request;
+use TetherPHP\Core\Responses\ViewResponse;
 
 class ShowHomePageAction
 {
+    protected $responder;
+
     public function __construct(protected Request $request)
     {
-        // nothing to see here
+        $this->responder = new ShowHomePageResponder($request);
     }
 
-    public function __invoke(): string
+    public function __invoke()
     {
-
-//        $result = $this->domain->create();
-//
-//        return $this->responder->respond($result);
-
-        // This method would typically render the home page view
-        return "Welcome to the Home Page! This is the request method: " . $this->request->method . " and URI: " . $this->request->uri;
+        return ($this->responder)();
     }
 }

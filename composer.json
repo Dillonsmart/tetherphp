@@ -2,7 +2,12 @@
     "autoload": {
         "psr-4": {
             "TetherPHP\\": "tetherphp",
-            "Action\\": "app/Action"
-        }
+            "Action\\": "app/Action",
+            "Responder\\": "app/Responder",
+            "Views\\": "app/Views"
+        },
+        "files": [
+            "tetherphp/Core/Helpers/GlobalFunctions.php"
+        ]
     }
 }
