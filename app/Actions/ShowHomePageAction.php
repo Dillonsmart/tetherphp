@@ -1,10 +1,10 @@
 <?php
 
-namespace Action\HomePage;
+namespace Actions;
 
-use Responder\HomePage\ShowHomePageResponder;
+use Domains\ShowHomePageDomain;
+use Responders\ShowHomePageResponder;
 use TetherPHP\Core\Requests\Request;
-use TetherPHP\Core\Responses\ViewResponse;
 
 class ShowHomePageAction
 {
@@ -17,6 +17,7 @@ class ShowHomePageAction
 
     public function __invoke()
     {
-        return ($this->responder)();
+        $domain = new ShowHomePageDomain();
+        return ($this->responder)($domain->getData());
     }
 }

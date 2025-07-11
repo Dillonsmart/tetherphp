@@ -1,6 +1,6 @@
 <?php
 
-namespace Responder;
+namespace Responders;
 
 use TetherPHP\Core\Requests\Request;
 

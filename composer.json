@@ -2,8 +2,9 @@
     "autoload": {
         "psr-4": {
             "TetherPHP\\": "tetherphp",
-            "Action\\": "app/Action",
-            "Responder\\": "app/Responder",
+            "Actions\\": "app/Actions",
+            "Responders\\": "app/Responders",
+            "Domains\\": "app/Domains",
             "Views\\": "app/Views"
         },
         "files": [
