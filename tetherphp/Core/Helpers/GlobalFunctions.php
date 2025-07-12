@@ -15,6 +15,11 @@ function views_dir(): string
     return app_dir() . 'Views/';
 }
 
+function public_dir(): string
+{
+    return project_root() . '/public/';
+}
+
 function core_dir(): string
 {
     return project_root() . '/tetherphp/Core';
