@@ -4,40 +4,34 @@ namespace TetherPHP\Core\Modules;
 
 class Log
 {
+    private const string LOG_DIR = 'logs/';
+
     public static function error(string $message): void
     {
-        (new Log)->writeLog('error', $message);
+        self::writeLog('error', $message);
     }
 
     public static function info(string $message): void
     {
-        (new Log)->writeLog('info', $message);
+        self::writeLog('info', $message);
     }
 
-    public function writeLog(string $level, string $message): void
+    private static function writeLog(string $level, string $message): void
     {
         try {
-            $logDir = storage_dir() . 'logs/';
+            $logDir = storage_dir() . self::LOG_DIR;
 
-            if(!is_dir($logDir)) {
+            if (!is_dir($logDir)) {
                 mkdir($logDir, 0755, true);
             }
 
-            $today = date('Y-m-d');
             $timestamp = date('Y-m-d H:i:s');
-
-            $logFile = storage_dir() . 'logs/'.$today.'.log';
+            $logFile = $logDir . date('Y-m-d') . '.log';
             $logMessage = "[$timestamp] [$level] $message" . PHP_EOL;
-
-            if (!file_exists($logFile)) {
-                file_put_contents($logFile, '');
-            }
 
             file_put_contents($logFile, $logMessage, FILE_APPEND);
         } catch (\Exception $e) {
-            // Handle any exceptions that occur during logging
-            echo "Failed to write log: " . $e->getMessage() . PHP_EOL;
+            error_log("Failed to write log: " . $e->getMessage());
         }
-
     }
 }
