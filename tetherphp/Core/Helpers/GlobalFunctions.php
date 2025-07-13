@@ -7,12 +7,17 @@ function project_root(): string
 
 function app_dir(): string
 {
-    return project_root() . '/app/';
+    return project_root() . '/app';
+}
+
+function storage_dir(): string
+{
+    return project_root() . '/storage/';
 }
 
 function views_dir(): string
 {
-    return app_dir() . 'Views/';
+    return app_dir() . '/Views/';
 }
 
 function public_dir(): string
@@ -37,10 +42,19 @@ function view(string $view)
 
 function env(string $key): ?string
 {
-    $env = \TetherPHP\Core\Modules\TetherEnv::getInstance();
+    $env = \TetherPHP\Core\Modules\Env::getInstance();
     try {
         return $env->getEnv($key);
     } catch (\Exception $e) {
         return null;
+    }
+}
+
+function loggger(string $message, string $level = 'info'): void
+{
+    if ($level === 'error') {
+        \TetherPHP\Core\Modules\Log::error($message);
+    } else {
+        \TetherPHP\Core\Modules\Log::info($message);
     }
 }

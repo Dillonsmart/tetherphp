@@ -1,0 +1,1 @@
+<h1 style="margin: 20px 0; text-align: center;">500 Internal Server Error</h1>

@@ -2,9 +2,9 @@
 
 namespace TetherPHP\Core\Modules;
 
-class TetherEnv
+class Env
 {
-    protected static ?TetherEnv $instance = null;
+    protected static ?Env $instance = null;
     protected string $basePath = '';
     protected array $envVars = [];
 
@@ -17,10 +17,10 @@ class TetherEnv
         $this->loadEnv();
     }
 
-    public static function getInstance(): TetherEnv
+    public static function getInstance(): Env
     {
         if (self::$instance === null) {
-            self::$instance = new TetherEnv();
+            self::$instance = new Env();
         }
         return self::$instance;
     }
