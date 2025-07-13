@@ -34,3 +34,13 @@ function view(string $view)
 {
     return include views_dir() . '/' . $view . '.php';
 }
+
+function env(string $key): ?string
+{
+    $env = \TetherPHP\Core\Modules\TetherEnv::getInstance();
+    try {
+        return $env->getEnv($key);
+    } catch (\Exception $e) {
+        return null;
+    }
+}

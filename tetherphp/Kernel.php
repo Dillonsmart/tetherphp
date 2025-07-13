@@ -2,6 +2,7 @@
 
 namespace TetherPHP;
 
+use TetherPHP\Core\Modules\TetherEnv;
 use TetherPHP\Core\Requests\Request;
 
 class Kernel {
@@ -9,7 +10,7 @@ class Kernel {
     protected Request $request;
 
     public function __construct(protected Router $router) {
-        // nothing to see here
+        TetherEnv::getInstance();
     }
 
     public function run() {
