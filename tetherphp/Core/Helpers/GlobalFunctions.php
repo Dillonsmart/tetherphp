@@ -29,3 +29,8 @@ function core_views(): string
 {
     return core_dir() . '/Views/';
 }
+
+function view(string $view)
+{
+    return include views_dir() . '/' . $view . '.php';
+}
