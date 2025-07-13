@@ -18,3 +18,11 @@ Then, navigate to the project directory and install the dependencies using Compo
 ```bash
 composer install
 ```
+
+## Usage
+To get started, take a copy of the `example.env` file and rename it to `.env`. Then, update the environment variables as needed.
+
+### Remove example files
+By default, a copy of TetherPHP contains the files for [tetherphp.com](https://tetherphp.com). It is recommended to remove these files before starting your project. You can do this by running the following command:
+
+Example files can be found in the `app/*` directories, in the public directory and the contents of the `web.php` route file.

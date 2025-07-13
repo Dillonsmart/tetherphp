@@ -9,6 +9,8 @@ class Kernel {
 
     protected Request $request;
 
+    protected string $version = "0.1 alpha";
+
     public function __construct(protected Router $router) {
         Env::getInstance();
 
