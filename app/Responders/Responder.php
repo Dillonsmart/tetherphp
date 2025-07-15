@@ -2,9 +2,10 @@
 
 namespace Responders;
 
+use TetherPHP\Core\Interfaces\ResponseInterface;
 use TetherPHP\Core\Requests\Request;
 
-class Responder
+class Responder implements ResponseInterface
 {
     public function __construct(protected Request $request)
     {
@@ -16,7 +17,7 @@ class Responder
         return $this;
     }
 
-    protected function view(string $viewName, array $data = []): string
+    public function view(string $viewName, array $data = []): string
     {
         $viewPath = str_replace('.', '/', $viewName);
 
@@ -35,7 +36,7 @@ class Responder
         return ob_get_clean();
     }
 
-    protected function json(array $data, int $statusCode): false|string
+    public function json(array $data, int $statusCode): string
     {
         http_response_code($statusCode);
         return json_encode($data);
