@@ -12,6 +12,8 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/docs">Docs</a></li>
+                <li><a href="https://github.com/DillonSmart/tetherphp">GitHub</a></li>
+                <li><a href="https://x.com/dillon_smart">Follow on X</a></li>
             </ul>
         </nav>
     </header>
