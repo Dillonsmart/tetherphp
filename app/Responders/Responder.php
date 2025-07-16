@@ -17,7 +17,7 @@ class Responder implements ResponseInterface
         return $this;
     }
 
-    public function view(string $viewName, array $data = []): string
+    public function view(string $viewName, ?array $data = []): string
     {
         $viewPath = str_replace('.', '/', $viewName);
 

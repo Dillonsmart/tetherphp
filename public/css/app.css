@@ -26,3 +26,26 @@ a{
     color: #007bff;
     text-decoration: none;
 }
+
+header {
+    padding: 0.5rem 2rem;
+}
+
+header nav {
+    text-align: right;
+}
+
+header nav ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+header nav ul li {
+    display: inline;
+    margin-right: 2rem;
+}
+
+header nav ul li:last-child {
+    margin-right: 0;
+}

@@ -11,7 +11,11 @@ class Router {
         $this->routes['GET'][$uri] = $action;
     }
 
-    public function find(Request $request) {
+    public function post(string $uri, string $action): void {
+        $this->routes['POST'][$uri] = $action;
+    }
+
+    public function routeAction(Request $request) {
         return $this->routes[$request->method][$request->uri];
     }
 }

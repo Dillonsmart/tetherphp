@@ -20,7 +20,7 @@ class Kernel {
     public function run() {
         $this->request = new Request($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
-        $action = $this->router->find($this->request);
+        $action = $this->router->routeAction($this->request);
 
         if(!$action) {
             return '404';
