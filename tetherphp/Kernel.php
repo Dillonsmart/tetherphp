@@ -9,10 +9,19 @@ class Kernel {
 
     protected Request $request;
 
-    protected string $version = "0.1 alpha";
+    protected string $versionName = "0.1 alpha";
+    protected float $versionNumber = 0.1;
 
     public function __construct(protected Router $router) {
         Env::getInstance();
+
+        if(!defined('VERSION_NAME')) {
+            define('VERSION_NAME', $this->versionName);
+        }
+
+        if(!defined('VERSION')) {
+            define('VERSION', $this->versionNumber);
+        }
 
         $this->setErrorHandler();
     }

@@ -74,6 +74,16 @@ a {
     transition: color 0.2s;
 }
 
+ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
 a:hover {
     color: #8a5c1b;
 }

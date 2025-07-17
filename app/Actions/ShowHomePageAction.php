@@ -7,10 +7,8 @@ use Responders\ShowHomePageResponder;
 use TetherPHP\Core\Interfaces\ResponseInterface;
 use TetherPHP\Core\Requests\Request;
 
-class ShowHomePageAction
+class ShowHomePageAction extends Action
 {
-    protected ResponseInterface $responder;
-
     public function __construct(protected Request $request)
     {
         $this->responder = new ShowHomePageResponder($request);

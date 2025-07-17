@@ -50,11 +50,21 @@ function env(string $key): ?string
     }
 }
 
-function loggger(string $message, string $level = 'info'): void
+function logger(string $message, string $level = 'info'): void
 {
     if ($level === 'error') {
         \TetherPHP\Core\Modules\Log::error($message);
     } else {
         \TetherPHP\Core\Modules\Log::info($message);
     }
+}
+
+function dd(...$args): void
+{
+    echo '<pre>';
+    foreach ($args as $arg) {
+        print_r($arg);
+    }
+    echo '</pre>';
+    exit;
 }
