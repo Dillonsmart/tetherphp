@@ -21,12 +21,6 @@ class Router {
     }
 
     public function makeUri(string $uri): string {
-//        if(empty($uri)) {
-//            $uri = '/';
-//        } else {
-//            $uri = rtrim($uri, '/');
-//        }
-
         return $this->prefix . $uri;
     }
 
@@ -62,6 +56,6 @@ class Router {
     }
 
     public function routeAction(Request $request) {
-        return $this->routes[$request->method][$request->uri];
+        return $this->routes[$request->method][$request->uri] ?? null;
     }
 }

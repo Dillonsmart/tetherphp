@@ -32,7 +32,8 @@ class Kernel {
         $action = $this->router->routeAction($this->request);
 
         if(!$action) {
-            return '404';
+            include(core_views() . 'errors/404.php');
+            exit(404);
         }
 
         $invokeAction = new $action($this->request);
