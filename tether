@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use TetherPHP\Core\Modules\Console;
+
+$args = array_slice($argv, 1);
+
+if (empty($args)) {
+    echo "No arguments provided.\n";
+    exit(1);
+}
+
+$command = $args[0];
+
+new Console($command)->executeCommand(array_slice($args, 1), []);
