@@ -2,12 +2,19 @@
 
 namespace Responders;
 
+use DTOs\HomePageData;
+
 class ShowHomePageResponder extends Responder
 {
     public function __invoke(?array $data): string
     {
-        $data['time'] = microtime(true) - $this->request->startTime;
+        $time = number_format((microtime(true) - $this->request->startTime) * 1000, 2);
 
-        return $this->response()->view('pages.home.index', $data);
+        $dto = new HomePageData((float)$time);
+
+        return $this->response()->view('pages.home.index', [
+            'data' => $dto,
+            'request' => $this->request,
+        ]);
     }
 }

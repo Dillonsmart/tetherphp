@@ -1,4 +1,6 @@
-<?php view('partials/header'); ?>
+<?php
+/** @var \DTOs\HomePageData $data */
+view('partials/header'); ?>
     <div style="margin: 2rem 0;">
         <div class="heading-area">
             <div class="container">
@@ -19,10 +21,7 @@
 
         <section class="container">
             <h2>Some stats</h2>
-            <?php
-            $ms = number_format($time * 1000, 2);
-            ?>
-            <p>This page took [<span class="font-bold"><?php echo $ms; ?> ms</span>] to load.</p>
+            <p>This page took [<span class="font-bold"><?php echo $data->time; ?> ms</span>] to load.</p>
         </section>
     </div>
 <?php view('partials/footer'); ?>
