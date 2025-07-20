@@ -17,12 +17,7 @@ class ClearBoilerPlateCommand extends Command
     {
         try {
 
-            $actions = glob (app_dir() . '/Actions/**/*.php');
-            $domains = glob (app_dir() . '/Domains/**/*.php');
-            $responders = glob (app_dir() . '/Responders/**/*.php');
-            $views = glob (views_dir() . '/**/*.php');
-
-            $filesToDelete = array_merge($actions, $domains, $responders, $views);
+            $filesToDelete = glob(app_dir() . '/**/*.php', GLOB_BRACE);
 
             foreach ($filesToDelete as $file) {
                 if (is_file($file)) {
