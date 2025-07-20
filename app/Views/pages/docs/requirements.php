@@ -8,9 +8,9 @@
 
         <div class="container">
             <ul>
-                <li>PHP version 8.1 or higher</li>
-                <li>Composer for dependency management</li>
-                <li>A web server (Apache, Nginx, etc.) or PHP's built-in server for local development</li>
+                <li><a href="https://www.php.net/releases/8.4/index.php" target="_blank">PHP 8.4</a> or higher</li>
+                <li><a href="https://getcomposer.org/" target="_blank">Composer</a> - out of the box TetherPHP doesn't have any dependency requirements</li>
+                <li>A web server (<a href="https://httpd.apache.org/" target="_blank">Apache</a>, <a href="https://nginx.org/" target="_blank">Nginx</a>, etc.) or PHP's built-in server for local development</li>
             </ul>
         </div>
     </div>

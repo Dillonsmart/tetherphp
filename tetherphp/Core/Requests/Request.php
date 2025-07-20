@@ -23,9 +23,12 @@ class Request implements RequestInterface
         }
     }
 
-    public function __construct(string $method = '', string $uri = '')
+    public float|string $startTime;
+
+    public function __construct(string $method = '', string $uri = '', float|string $startTime = '')
     {
         $this->method = $method;
         $this->uri = $uri;
+        $this->startTime = $startTime ?: microtime(true);
     }
 }

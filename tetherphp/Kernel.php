@@ -12,7 +12,10 @@ class Kernel {
     protected string $versionName = "0.1 alpha";
     protected float $versionNumber = 0.1;
 
+    public float|string $startTime;
+
     public function __construct(protected Router $router) {
+        $this->startTime = microtime(true);
         Env::getInstance();
 
         if(!defined('VERSION_NAME')) {
@@ -27,7 +30,7 @@ class Kernel {
     }
 
     public function run() {
-        $this->request = new Request($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+        $this->request = new Request($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $this->startTime);
 
         $action = $this->router->routeAction($this->request);
 
