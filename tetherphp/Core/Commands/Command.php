@@ -15,4 +15,14 @@ class Command
     protected array $arguments = []; // listed in the order they are defined
 
     protected array $options = [];
+
+    public function success(string $message): void
+    {
+        echo "\033[32m{$message}\033[0m";
+    }
+
+    public function error(string $message): void
+    {
+        echo "\033[31m{$message}\033[0m";
+    }
 }
