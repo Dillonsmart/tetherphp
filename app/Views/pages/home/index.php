@@ -16,7 +16,7 @@ view('partials/header'); ?>
             </h2>
             <p>Discover the elegance of PHP with TetherPHP, a framework crafted for clarity and simplicity.</p>
             <p>Build sophisticated websites and applications effortlessly, embracing the art of minimalism and precision.</p>
-            <p>TetherPHP is in its early days&mdash;the framework is actively evolving and under development.</p>
+            <p>TetherPHP is in its early days&mdash;the framework is actively evolving and underdevelopment.</p>
         </section>
 
         <section class="container">

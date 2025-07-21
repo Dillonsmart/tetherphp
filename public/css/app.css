@@ -110,3 +110,12 @@ a:hover {
 section {
     margin-bottom: 2rem;
 }
+
+pre {
+    background-color: #f8f8f8;
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+    overflow-x: auto;
+    font-family: monospace;
+}

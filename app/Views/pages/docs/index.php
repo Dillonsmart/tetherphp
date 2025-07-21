@@ -12,6 +12,7 @@
             <p>TetherPHP is in its early days&mdash;the documentation and features are actively being developed.</p>
             <ul>
                 <li><a href="/docs/requirements">Requirements</a></li>
+                <li><a href="/docs/usage">Usage</a></li>
             </ul>
         </div>
     </div>

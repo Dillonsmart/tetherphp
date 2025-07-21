@@ -2,13 +2,16 @@
 
 namespace Domains;
 
+use DTOs\HomePageData;
+
 class ShowHomePageDomain extends Domain
 {
-    public function getData(): array
+    public function getData(): HomePageData
     {
-        return [
-            'title' => 'Home Page',
-            'content' => 'Welcome to the home page!'
-        ];
+        return new HomePageData(
+            [
+                'title' => 'Home Page'
+            ]
+        );
     }
 }

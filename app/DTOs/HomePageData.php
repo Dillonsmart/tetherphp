@@ -4,8 +4,16 @@ namespace DTOs;
 
 class HomePageData
 {
-    public function __construct(public float $time)
+    public string $title;
+
+    public float $time {
+        set {
+            $this->time = $value;
+        }
+    }
+
+    public function __construct(array $data = [])
     {
-        // nothing to do here
+        $this->title = $data['title'] ?? 'Home Page';
     }
 }
