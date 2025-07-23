@@ -27,6 +27,7 @@
             <p>To clear all the boilerplate, you can run the following command. This will leave you with a blank slate to build whatever your heart desires.</p>
             <p>From the root directory of the project, run:</p>
             <pre>php tether boilerplate:clear</pre>
+            <p>Now you've cleared all the boilerplate code, your ready to get to work.</p>
         </section>
     </div>
 <?php view('partials/footer'); ?>

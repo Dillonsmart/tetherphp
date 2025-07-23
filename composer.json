@@ -6,7 +6,7 @@
             "Responders\\": "app/Responders",
             "Domains\\": "app/Domains",
             "Views\\": "app/Views",
-            "DTOs\\": "app/DTOs"
+            "DTOs\\": "app/Domains/DTOs"
         },
         "files": [
             "tetherphp/Core/Helpers/GlobalFunctions.php"

@@ -1,5 +1,5 @@
 <?php
-/** @var \DTOs\HomePageData $data */
+/** @var \Domains\DTOs\HomePageData $data */
 view('partials/header'); ?>
     <div style="margin: 2rem 0;">
         <div class="heading-area">
