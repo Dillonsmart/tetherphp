@@ -43,7 +43,7 @@ class Console
     public function executeCommand(array $args = [], array $options = []): int
     {
         if (isset($this->commands[$this->command])) {
-            $commandInstance = new $this->commands[$this->command]();
+            $commandInstance = new $this->commands[$this->command]($args, $options);
             return $commandInstance->execute();
         }
 

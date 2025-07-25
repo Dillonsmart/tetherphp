@@ -11,8 +11,6 @@ class ClearBoilerPlateCommand extends Command
 
     protected array $arguments = []; // listed in the order they are defined
 
-    protected array $options = [];
-
     protected array $protectedFiles = [
         'Action.php',
         'Responder.php',
