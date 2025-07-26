@@ -1,0 +1,19 @@
+<?php
+
+namespace Actions;
+
+use Responders\{{className}} as Responder;
+use TetherPHP\Core\Requests\Request;
+
+class {{className}} extends Action
+{
+    public function __construct(protected Request $request)
+    {
+        $this->responder = new Responder($request);
+    }
+
+    public function __invoke()
+    {
+        return ($this->responder)();
+    }
+}
