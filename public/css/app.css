@@ -88,7 +88,7 @@ a {
 ul {
     list-style-type: disc;
     padding-left: 1.5rem;
-    margin-bottom: 1rem;
+    margin: 0.5rem 0 1rem;
 }
 
 li {

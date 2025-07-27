@@ -12,7 +12,19 @@
             <p>TetherPHP is in its early days&mdash;the documentation and features are actively being developed.</p>
             <ul>
                 <li><a href="/docs/requirements">Requirements</a></li>
-                <li><a href="/docs/usage">Usage</a></li>
+                <li>
+                    <a href="/docs/usage">Usage</a>
+                    <ul>
+                        <li>
+                            <a href="/docs/usage#gettingStarted">Getting Started</a>
+                            <ul>
+                                <li><a href="/docs/usage#cloning">Cloning the repo</a></li>
+                                <li><a href="/docs/usage#installing">Installing with Composer</a></li>
+                                <li><a href="/docs/usage#clearBoilerPlate">Clearing boilerplate code</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>
