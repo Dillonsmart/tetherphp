@@ -18,11 +18,17 @@
             </p>
         </section>
         <section class="container">
-            <h2>Getting started</h2>
-            <p>The first step is to grab the latest copy of TetherPHP. You can do this by cloning the repository:</p>
+            <h2 class="font-semibold">Getting started</h2>
+            <p>The first step is to grab the latest copy of TetherPHP. You can do this by either cloning the repo from <a href="https://github.com/Dillonsmart/tetherphp" target="_blank">GitHub</a>:</p>
             <pre>git clone https://github.com/Dillonsmart/tetherphp.git</pre>
+            <p>Or you can create a new project using Composer:</p>
+            <pre>composer create-project dillonsmart/tetherphp ./new-project</pre>
             <p>After cloning the repository, you may notice the framework comes packaged with a complete copy of this website.</p>
             <p>The decision behind this was to ship with a fully functional website, demonstrating how to use the framework.</p>
+            <h3>Installing Dependencies</h3>
+            <p>TetherPHP doesn't require any dependencies out of the box. However, Composer is used to manage dependencies should you want to include any later on.</p>
+            <p>Generate the autoload load file for Composer:</p>
+            <pre>composer install</pre>
             <h3>Clearing all the boilerplate</h3>
             <p>To clear all the boilerplate, you can run the following command. This will leave you with a blank slate to build whatever your heart desires.</p>
             <p>From the root directory of the project, run:</p>

@@ -28,7 +28,6 @@ header .container {
 
 header nav {
     text-align: right;
-    margin-top: 0.5rem;
 }
 
 header nav ul {
@@ -39,7 +38,8 @@ header nav ul {
 
 header nav ul li {
     display: inline-block;
-    margin-right: 2rem;
+    margin-right: 1rem;
+    vertical-align: middle;
 }
 
 header nav ul li:last-child {
@@ -70,7 +70,7 @@ h2 {
 
 h3 {
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin: 2rem 0 1rem;
 }
 
 p {
@@ -106,6 +106,10 @@ a:hover {
 
 .justify-between {
     justify-content: space-between;
+}
+
+.font-semibold {
+    font-weight: 600;
 }
 
 .font-bold {
