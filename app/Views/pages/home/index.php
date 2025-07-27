@@ -18,10 +18,5 @@ view('partials/header'); ?>
             <p>Build sophisticated websites and applications effortlessly, embracing the art of minimalism and precision.</p>
             <p>TetherPHP is in its early days&mdash;the framework is actively evolving and underdevelopment.</p>
         </section>
-
-        <section class="container">
-            <h2>Some stats</h2>
-            <p>This page took [<span class="font-bold"><?php echo $data->time; ?> ms</span>] to load.</p>
-        </section>
     </div>
 <?php view('partials/footer'); ?>

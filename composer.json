@@ -1,4 +1,13 @@
 {
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "dillonsmart/tetherphp",
+    "type": "project",
+    "description": "TetherPHP is a PHP framework which ships as a skeleton application.",
+    "keywords": ["tetherphp", "framework"],
+    "license": "MIT",
+    "require": {
+        "php": "^8.4"
+    },
     "autoload": {
         "psr-4": {
             "TetherPHP\\": "tetherphp",
