@@ -20,5 +20,6 @@
         "files": [
             "tetherphp/Core/Helpers/GlobalFunctions.php"
         ]
-    }
+    },
+    "minimum-stability": "stable"
 }
