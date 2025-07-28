@@ -47,6 +47,8 @@ class Console
             return $commandInstance->execute();
         }
 
-        return Command::COMMAND_INVALID_ARGUMENT;
+        // TODO - If command methods are going to be called directly, maybe consider a shared trait.
+        (new \TetherPHP\Core\Commands\Command)->error("Command {$this->command} not found.");
+        return Command::COMMAND_ERROR;
     }
 }
