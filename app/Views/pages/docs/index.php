@@ -10,6 +10,7 @@
             <p>Welcome to the TetherPHP documentation.</p>
             <p>Comprehensive guides and references are on the way as the framework continues to evolve.</p>
             <p>TetherPHP is in its early days&mdash;the documentation and features are actively being developed.</p>
+            <h3>Start here:</h3>
             <ul>
                 <li><a href="/docs/requirements">Requirements</a></li>
                 <li>

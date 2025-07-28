@@ -20,19 +20,28 @@ class Console
         ];
 
         $customCommands = [
-            // todo - implement custom commands
+            ...glob(app_dir() . "/Commands/*.php"),
         ];
 
         foreach ($tetherCommands as $commandClass) {
             $className = 'TetherPHP\\Core\\Commands\\' . basename($commandClass, '.php');
 
-            if (class_exists($className) && is_subclass_of($className, Command::class)) {
-                $commandInstance = new $className();
-                $this->commands[$commandInstance->command] = $className;
-            }
+            $this->addCommand($className);
         }
 
-        // TODO - implement custom commands
+        foreach ($customCommands as $commandClass) {
+            $className = 'Commands\\' . basename($commandClass, '.php');
+
+            $this->addCommand($className);
+        }
+    }
+
+    private function addCommand(string $className): void
+    {
+        if (class_exists($className) && is_subclass_of($className, Command::class)) {
+            $commandInstance = new $className();
+            $this->commands[$commandInstance->command] = $className;
+        }
     }
 
     public function executeCommand(array $args = [], array $options = []): int

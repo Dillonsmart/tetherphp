@@ -4,11 +4,11 @@ namespace TetherPHP\Core\Commands;
 
 use TetherPHP\Core\Traits\Strings;
 
-class CreateFeatureCommand extends Command
+class MakeFeatureCommand extends Command
 {
     use Strings;
 
-    public string $command = 'create:feature';
+    public string $command = 'make:feature';
 
     public string $description = 'Creates a new feature';
 

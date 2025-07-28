@@ -15,7 +15,8 @@
             "Responders\\": "app/Responders",
             "Domains\\": "app/Domains",
             "Views\\": "app/Views",
-            "DTOs\\": "app/Domains/DTOs"
+            "DTOs\\": "app/Domains/DTOs",
+            "Commands\\": "app/Commands"
         },
         "files": [
             "tetherphp/Core/Helpers/GlobalFunctions.php"

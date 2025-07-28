@@ -1,0 +1,19 @@
+<?php
+
+namespace Commands;
+
+use TetherPHP\Core\Commands\Command;
+
+class {{className}} extends Command
+{
+    // 'php tether tetherphp:command'
+    public string $command = 'tetherphp:command';
+
+    public string $description = '';
+
+    public function execute(): int
+    {
+        $this->info('Executing {{className}}...');
+        return self::COMMAND_SUCCESS;
+    }
+}
