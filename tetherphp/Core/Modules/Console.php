@@ -10,11 +10,6 @@ class Console
 
     public function __construct(public string $command)
     {
-        if(empty($this->command)) {
-            echo "No command provided.\n";
-            exit(Command::COMMAND_INVALID_ARGUMENT);
-        }
-
         $this->registerCommands();
     }
 

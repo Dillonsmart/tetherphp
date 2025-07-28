@@ -17,14 +17,19 @@ class Command
     public function __construct(public array $args = [], public array $opts = [])
     {}
 
+    public function info(string $message): void
+    {
+        echo "\033[34m{$message}\033[0m \n";
+    }
+
     public function success(string $message): void
     {
-        echo "\033[32m{$message}\033[0m";
+        echo "\033[32m{$message}\033[0m \n";
     }
 
     public function error(string $message): void
     {
-        echo "\033[31m{$message}\033[0m";
+        echo "\033[31m{$message}\033[0m \n";
     }
 
     public function argument(string $name): string|\Exception
