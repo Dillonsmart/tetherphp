@@ -12,6 +12,10 @@ class Router {
 
     public string $prefix = '';
 
+    public function view(string $uri, string $view): void {
+        $this->routes['GET'][$this->makeUri($uri)] = $view;
+    }
+
     public function get(string $uri, string $action): void {
         $this->routes['GET'][$this->makeUri($uri)] = $action;
     }

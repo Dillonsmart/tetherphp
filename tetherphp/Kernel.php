@@ -2,6 +2,7 @@
 
 namespace TetherPHP;
 
+use Responders\Responder;
 use TetherPHP\Core\Modules\Env;
 use TetherPHP\Core\Requests\Request;
 
@@ -37,6 +38,11 @@ class Kernel {
         if(!$action) {
             include(core_views() . 'errors/404.php');
             exit(404);
+        }
+
+        // if we are using a view, we can just return the view
+        if(!class_exists($action)) {
+            return new Responder($this->request)->view($action, []);
         }
 
         $invokeAction = new $action($this->request);

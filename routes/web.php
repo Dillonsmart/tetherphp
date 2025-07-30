@@ -3,7 +3,7 @@
 use TetherPHP\Router;
 
 return function (Router $router) {
-    $router->get('/', Actions\ShowHomePageAction::class);
+    $router->view('/', 'pages.home.index');
 
     $router->group('/docs', function(Router $router) {
         $router->get('', Actions\ShowDocsPageAction::class);
