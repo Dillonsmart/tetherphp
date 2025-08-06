@@ -4,5 +4,12 @@ TetherPHP is a lightweight, flexible framework for building web applications in 
 
 [Follow the development on X](https://x.com/dillon_smart)
 
+## Installation
+You can install TetherPHP using Composer. Run the following command in your terminal:
+
+```bash
+composer create-project dillonsmart/tetherphp ./
+```
+
 ## Usage
 To get started with TetherPHP, please refer to the [documentation](https://tetherphp.com/docs).
