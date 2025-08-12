@@ -24,6 +24,7 @@
                                 <li><a href="/docs/usage#clearBoilerPlate">Clearing boilerplate code</a></li>
                             </ul>
                         </li>
+                        <li><a href="/docs/routing">Routing</a></li>
                     </ul>
                 </li>
             </ul>
