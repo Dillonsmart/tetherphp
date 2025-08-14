@@ -17,6 +17,7 @@ view('partials/header'); ?>
             <p>Discover the elegance of PHP with TetherPHP, a framework crafted for clarity and simplicity.</p>
             <p>Build sophisticated websites and applications effortlessly, embracing the art of minimalism and precision.</p>
             <p>TetherPHP is in its early days&mdash;the framework is actively evolving and underdevelopment.</p>
+            <p><a href="docs/adr">Learn about ADR architecture</a></p>
         </section>
     </div>
 <?php view('partials/footer'); ?>
