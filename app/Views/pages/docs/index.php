@@ -12,6 +12,7 @@
             <p>TetherPHP is in its early days&mdash;the documentation and features are actively being developed.</p>
             <h3>Start here:</h3>
             <ul>
+                <li><a href="/docs/adr">What is ADR?</a></li>
                 <li><a href="/docs/requirements">Requirements</a></li>
                 <li>
                     <a href="/docs/usage">Usage</a>
