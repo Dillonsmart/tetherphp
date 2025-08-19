@@ -4,8 +4,9 @@ namespace Actions;
 
 use Responders\{{className}} as Responder;
 use TetherPHP\Core\Requests\Request;
+use TetherPHP\Core\Interfaces\ActionInterface;
 
-class {{className}} extends Action
+class {{className}} extends Action implements ActionInterface
 {
     public function __construct(protected Request $request)
     {
