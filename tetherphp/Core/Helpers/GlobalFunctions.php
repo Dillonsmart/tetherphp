@@ -58,13 +58,3 @@ function logger(string $message, string $level = 'info'): void
         \TetherPHP\Core\Modules\Log::info($message);
     }
 }
-
-function dd(...$args): void
-{
-    echo '<pre>';
-    foreach ($args as $arg) {
-        print_r($arg);
-    }
-    echo '</pre>';
-    exit;
-}

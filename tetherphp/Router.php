@@ -54,7 +54,8 @@ class Router {
         return str_contains($uri, '{') && str_contains($uri, '}');
     }
 
-    public function handleDynamicParts(string $uri) {
+    public function handleDynamicParts(string $uri): array
+    {
         $dynamicParts = explode('{', $uri);
 
         $validParts = [];
