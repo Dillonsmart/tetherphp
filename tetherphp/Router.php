@@ -113,6 +113,8 @@ class Router {
         if(array_key_exists($request->uri, $this->routes[$request->method])) {
             $routeObject->action = $this->routes[$request->method][$request->uri]['action'] ?? null;
             $routeObject->type = $this->routes[$request->method][$request->uri]['type'] ?? null;
+
+            return $routeObject;
         }
 
         foreach ($this->routes[$request->method] as $uri => $route) {
@@ -138,7 +140,7 @@ class Router {
 
                 if ($isMatch) {
                     $routeObject->action = $route['action'];
-                    $routeObject->type = $this->routes[$request->method][$request->uri]['type'] ?? 'static';
+                    $routeObject->type = 'dynamic';
                     $routeObject->params = $params;
                 }
             }

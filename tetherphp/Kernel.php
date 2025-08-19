@@ -36,7 +36,7 @@ class Kernel {
         $route = $this->router->routeAction($this->request);
 
         // the lack of action indicates the route was not found
-        if(!$route->action) {
+        if(!isset($route->action)) {
             include(core_views() . 'errors/404.php');
             exit(404);
         }
