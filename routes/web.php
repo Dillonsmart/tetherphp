@@ -1,9 +1,11 @@
 <?php
 
+use Actions\Blog;
 use TetherPHP\Router;
 
 return function (Router $router) {
     $router->view('/', 'pages.home.index');
+    $router->get('/dynamic/{id}/test/{t}', Blog::class);
 
     $router->group('/docs', function(Router $router) {
         $router->view('', 'pages.docs.index');

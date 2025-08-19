@@ -33,19 +33,24 @@ class Kernel {
     public function run() {
         $this->request = new Request($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $this->startTime);
 
-        $action = $this->router->routeAction($this->request);
+        $route = $this->router->routeAction($this->request);
 
-        if(!$action) {
+        if(!$route) {
             include(core_views() . 'errors/404.php');
             exit(404);
         }
 
+        $actionClass = $route['action'] ?? null;
+        $params = $route['params'] ?? [];
+
+        // todo - revisit how views are handled, as an invalid action will return a view
+        // the router should probably return an array key of 'action' and 'type' to differentiate between a view and an action
         // if we are using a view, we can just return the view
-        if(!class_exists($action)) {
-            return new Responder($this->request)->view($action, []);
+        if(!class_exists($actionClass)) {
+            return new Responder($this->request)->view($actionClass, []);
         }
 
-        $invokeAction = new $action($this->request);
+        $invokeAction = new $actionClass($this->request);
         return $invokeAction();
     }
 
