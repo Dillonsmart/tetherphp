@@ -1,5 +1,7 @@
 <?php
 
+use JetBrains\PhpStorm\NoReturn;
+
 function project_root(): string
 {
     return dirname(__DIR__, 3);

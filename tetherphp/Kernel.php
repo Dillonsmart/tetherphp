@@ -35,22 +35,22 @@ class Kernel {
 
         $route = $this->router->routeAction($this->request);
 
-        if(!$route) {
+        // the lack of action indicates the route was not found
+        if(!$route->action) {
             include(core_views() . 'errors/404.php');
             exit(404);
         }
 
-        $actionClass = $route['action'] ?? null;
-        $params = $route['params'] ?? [];
-
-        // todo - revisit how views are handled, as an invalid action will return a view
-        // the router should probably return an array key of 'action' and 'type' to differentiate between a view and an action
-        // if we are using a view, we can just return the view
-        if(!class_exists($actionClass)) {
-            return new Responder($this->request)->view($actionClass, []);
+        if($route->type === 'view') {
+            return new Responder($this->request)->view($route->action, []);
+        } else {
+            if(!class_exists($route->action)) {
+                include(core_views() . 'errors/500.php');
+                exit(500);
+            }
         }
 
-        $invokeAction = new $actionClass($this->request);
+        $invokeAction = new $route->action($this->request);
         return $invokeAction();
     }
 
@@ -67,12 +67,14 @@ class Kernel {
         set_error_handler(function($errno, $errstr, $errfile, $errline) {
             \TetherPHP\Core\Modules\Log::error("Error [$errno]: $errstr in $errfile on line $errline");
             include(core_views() . 'errors/500.php');
+            exit(500);
         });
 
         set_exception_handler(function($exception) {
             \TetherPHP\Core\Modules\Log::error("Uncaught Exception: " . $exception->getMessage());
             \TetherPHP\Core\Modules\Log::error("Uncaught Exception: " . $exception->getTraceAsString());
             include(core_views() . 'errors/500.php');
+            exit(500);
         });
     }
 }

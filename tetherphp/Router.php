@@ -2,6 +2,7 @@
 
 namespace TetherPHP;
 
+use TetherPHP\Core\DTOs\RouteDTO;
 use TetherPHP\Core\Requests\Request;
 
 class Router {
@@ -106,13 +107,12 @@ class Router {
         $this->prefix = '';
     }
 
-    public function routeAction(Request $request): array|null {
+    public function routeAction(Request $request): RouteDTO {
+        $routeObject = new RouteDTO();
+
         if(array_key_exists($request->uri, $this->routes[$request->method])) {
-            return [
-                'action' => $this->routes[$request->method][$request->uri]['action'] ?? null,
-                'params' => [],
-                'type' => $this->routes[$request->method][$request->uri]['type'] ?? 'static'
-            ];
+            $routeObject->action = $this->routes[$request->method][$request->uri]['action'] ?? null;
+            $routeObject->type = $this->routes[$request->method][$request->uri]['type'] ?? null;
         }
 
         foreach ($this->routes[$request->method] as $uri => $route) {
@@ -137,15 +137,13 @@ class Router {
                 }
 
                 if ($isMatch) {
-                    return [
-                        'action' => $route['action'],
-                        'params' => $params,
-                        'type' => $this->routes[$request->method][$request->uri]['type'] ?? 'static'
-                    ];
+                    $routeObject->action = $route['action'];
+                    $routeObject->type = $this->routes[$request->method][$request->uri]['type'] ?? 'static';
+                    $routeObject->params = $params;
                 }
             }
         }
 
-        return null;
+        return $routeObject;
     }
 }
