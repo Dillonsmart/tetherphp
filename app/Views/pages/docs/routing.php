@@ -18,6 +18,7 @@
                 <ul>
                     <li><a href="#defining-routes">Defining routes</a></li>
                     <li><a href="#returning-views">Returning views</a></li>
+                    <li><a href="#dynamic-routes">Dynamic routes</a></li>
                 </ul>
             </section>
 
@@ -33,6 +34,12 @@
                 <p>This can become overkill when you need to return some static HTML, CSS and JavaScript.</p>
                 <p>To keep the code base cleaner, you can return views directly when making a GET request:</p>
                 <pre><code>$router->view('/path', 'pages.home');</code></pre>
+            </section>
+
+            <section>
+                <h3 id="dynamic-routes">Dynamic Routes</h3>
+                <p>Dynamic routes can be defined using placeholders in the URL. For example:</p>
+                <pre><code>$router->get('/user/{id}', UserAction::class);</code></pre>
             </section>
         </div>
     </div>

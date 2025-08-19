@@ -1,5 +1,6 @@
 <?php
 
+use Actions\Blog;
 use TetherPHP\Router;
 
 return function (Router $router) {

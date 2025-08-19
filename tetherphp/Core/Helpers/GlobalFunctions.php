@@ -1,5 +1,7 @@
 <?php
 
+use JetBrains\PhpStorm\NoReturn;
+
 function project_root(): string
 {
     return dirname(__DIR__, 3);
@@ -57,14 +59,4 @@ function logger(string $message, string $level = 'info'): void
     } else {
         \TetherPHP\Core\Modules\Log::info($message);
     }
-}
-
-function dd(...$args): void
-{
-    echo '<pre>';
-    foreach ($args as $arg) {
-        print_r($arg);
-    }
-    echo '</pre>';
-    exit;
 }
