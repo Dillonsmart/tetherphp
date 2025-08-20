@@ -50,6 +50,8 @@ class Kernel {
             }
         }
 
+        $this->request->params = $route->params;
+
         $invokeAction = new $route->action($this->request);
         return $invokeAction();
     }

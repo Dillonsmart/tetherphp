@@ -23,6 +23,15 @@ class Request implements RequestInterface
         }
     }
 
+    public array $params {
+        get {
+            return $this->params;
+        }
+        set {
+            $this->params = $value;
+        }
+    }
+
     public float|string $startTime;
 
     public function __construct(string $method = '', string $uri = '', float|string $startTime = '')
