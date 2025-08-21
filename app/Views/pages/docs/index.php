@@ -26,6 +26,7 @@
                             </ul>
                         </li>
                         <li><a href="/docs/routing">Routing</a></li>
+                        <li><a href="/docs/responders">Responders</a></li>
                     </ul>
                 </li>
             </ul>

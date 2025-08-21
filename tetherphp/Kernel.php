@@ -50,7 +50,11 @@ class Kernel {
             }
         }
 
-        $this->request->params = $route->params;
+        if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
+            $this->request->payload = json_decode(file_get_contents('php://input'), true) ?? [];
+        } else {
+            $this->request->payload = $_POST ?? [];
+        }
 
         $invokeAction = new $route->action($this->request);
         return $invokeAction();

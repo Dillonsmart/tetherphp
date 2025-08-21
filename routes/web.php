@@ -11,5 +11,6 @@ return function (Router $router) {
         $router->view('/requirements', 'pages.docs.requirements');
         $router->view('/usage', 'pages.docs.usage');
         $router->view('/routing', 'pages.docs.routing');
+        $router->view('/responders', 'pages.docs.responders');
     });
 };

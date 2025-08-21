@@ -36,7 +36,7 @@ class Responder implements ResponseInterface
         return ob_get_clean();
     }
 
-    public function json(array $data, int $statusCode): string
+    public function json(array $data, int $statusCode = 200): string
     {
         http_response_code($statusCode);
         return json_encode($data);

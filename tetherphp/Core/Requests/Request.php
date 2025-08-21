@@ -23,12 +23,12 @@ class Request implements RequestInterface
         }
     }
 
-    public array $params {
+    public array $payload {
         get {
-            return $this->params;
+            return $this->payload;
         }
         set {
-            $this->params = $value;
+            $this->payload = $value;
         }
     }
 

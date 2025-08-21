@@ -26,6 +26,8 @@
                 <h3 id="defining-routes">Defining routes</h3>
                 <pre><code>$router->get('/path', YourAction::class);</code></pre>
                 <p>In this example, the <code>/path</code> URL will trigger the <code>YourAction</code> class when accessed via a GET request. The action class will then be invoked and trigger your domain logic and return a responder.</p>
+                <p>For POST requests, you can define routes similarly:</p>
+                <pre><code>$router->post('/path', YourAction::class);</code></pre>
             </section>
 
             <section>
