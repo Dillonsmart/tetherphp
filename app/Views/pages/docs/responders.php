@@ -27,14 +27,12 @@ class ExampleResponder extends Responder
                 <p>To return a JSON response, you can use the <code>json</code> method of the response object. This is particularly useful for APIs or AJAX requests.</p>
                 <pre><code>namespace Responders;
 
-class Post extends Responder
+class ExampleResponder extends Responder
 {
     public function __invoke(): string
     {
         return $this->response()->json([
             'status' => 'success',
-            'message' => 'Post request handled successfully',
-            'data' => $this->request->payload
         ]);
     }
 }</code></pre>
