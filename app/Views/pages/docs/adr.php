@@ -24,7 +24,7 @@
 
 use Domains\PathDomain;
 use Responders\PathResponder as Responder;
-use TetherPHP\Core\Requests\Request;
+use TetherPHP\framework\Requests\Request;
 
 class PathAction extends Action
 {

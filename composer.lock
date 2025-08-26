@@ -4,15 +4,52 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d751713988987e9331980363e24189ce",
-    "packages": [],
+    "content-hash": "d716609e77e2b1059046712308c04660",
+    "packages": [
+        {
+            "name": "dillonsmart/tetherphp-core",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../tetherphp-core",
+                "reference": "1b705db19cc5e22f83a92080212df9e361b3bf69"
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^10.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "TetherPHP\\": "src/"
+                },
+                "files": [
+                    "src/framework/Helpers/GlobalFunctions.php"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "The core framework files for TetherPHP.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        }
+    ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {},
-    "prefer-stable": false,
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "dillonsmart/tetherphp-core": 20
+    },
+    "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": {},
+    "platform": {
+        "php": "^8.4"
+    },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

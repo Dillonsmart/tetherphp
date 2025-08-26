@@ -2,7 +2,7 @@
 
 namespace Actions;
 
-use TetherPHP\Core\Interfaces\ResponseInterface;
+use TetherPHP\framework\Interfaces\ResponseInterface;
 
 class Action
 {
