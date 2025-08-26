@@ -3,7 +3,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use TetherPHP\Core\Modules\Console;
+use TetherPHP\framework\Modules\Console;
 
 $args = array_slice($argv, 1);
 

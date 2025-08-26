@@ -1,26 +1,33 @@
 {
-    "$schema": "https://getcomposer.org/schema.json",
-    "name": "dillonsmart/tetherphp",
-    "type": "project",
-    "description": "TetherPHP is a PHP framework which ships as a skeleton application.",
-    "keywords": ["tetherphp", "framework"],
-    "license": "MIT",
-    "require": {
-        "php": "^8.4"
-    },
-    "autoload": {
-        "psr-4": {
-            "TetherPHP\\": "tetherphp",
-            "Actions\\": "app/Actions",
-            "Responders\\": "app/Responders",
-            "Domains\\": "app/Domains",
-            "Views\\": "app/Views",
-            "DTOs\\": "app/Domains/DTOs",
-            "Commands\\": "app/Commands"
-        },
-        "files": [
-            "tetherphp/Core/Helpers/GlobalFunctions.php"
-        ]
-    },
-    "minimum-stability": "stable"
+  "name": "dillonsmart/tetherphp",
+  "type": "project",
+  "description": "TetherPHP is a PHP framework which ships as a skeleton application.",
+  "keywords": [
+    "tetherphp",
+    "framework"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": "^8.4",
+    "dillonsmart/tetherphp-core": "dev-main"
+  },
+  "autoload": {
+    "psr-4": {
+      "Actions\\": "app/Actions/",
+      "Responders\\": "app/Responders/",
+      "Domains\\": "app/Domains/",
+      "Views\\": "app/Views/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../tetherphp-core",
+      "options": {
+        "symlink": true
+      }
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

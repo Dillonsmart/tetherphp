@@ -2,8 +2,8 @@
 
 namespace Responders;
 
-use TetherPHP\Core\Interfaces\ResponseInterface;
-use TetherPHP\Core\Requests\Request;
+use TetherPHP\framework\Interfaces\ResponseInterface;
+use TetherPHP\framework\Requests\Request;
 
 class Responder implements ResponseInterface
 {
