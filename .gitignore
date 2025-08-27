@@ -5,3 +5,4 @@ storage/private/*
 storage/logs/*
 TODO.md
 vendor
+composer.local.json

@@ -4,15 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d716609e77e2b1059046712308c04660",
+    "content-hash": "2b399385a1cee08c956f9f0b5db2355f",
     "packages": [
         {
             "name": "dillonsmart/tetherphp-core",
             "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Dillonsmart/tetherphp-core.git",
+                "reference": "b55bf0742605926a22f68b01d5aee14dc7a16c0e"
+            },
             "dist": {
-                "type": "path",
-                "url": "../tetherphp-core",
-                "reference": "1b705db19cc5e22f83a92080212df9e361b3bf69"
+                "type": "zip",
+                "url": "https://api.github.com/repos/Dillonsmart/tetherphp-core/zipball/b55bf0742605926a22f68b01d5aee14dc7a16c0e",
+                "reference": "b55bf0742605926a22f68b01d5aee14dc7a16c0e",
+                "shasum": ""
             },
             "require": {
                 "php": ">=8.1"
@@ -20,23 +26,26 @@
             "require-dev": {
                 "phpunit/phpunit": "^10.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "TetherPHP\\": "src/"
-                },
                 "files": [
                     "src/framework/Helpers/GlobalFunctions.php"
-                ]
+                ],
+                "psr-4": {
+                    "TetherPHP\\": "src/"
+                }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "The core framework files for TetherPHP.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/Dillonsmart/tetherphp-core/issues",
+                "source": "https://github.com/Dillonsmart/tetherphp-core/tree/v0.1.5"
+            },
+            "time": "2025-08-26T18:31:48+00:00"
         }
     ],
     "packages-dev": [],

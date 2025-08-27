@@ -19,15 +19,6 @@
       "Views\\": "app/Views/"
     }
   },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../tetherphp-core",
-      "options": {
-        "symlink": true
-      }
-    }
-  ],
   "minimum-stability": "dev",
   "prefer-stable": true
 }
