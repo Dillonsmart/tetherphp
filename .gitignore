@@ -6,3 +6,5 @@ storage/logs/*
 TODO.md
 vendor
 composer.local.json
+composer.local.lock
+node_modules

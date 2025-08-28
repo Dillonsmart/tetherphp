@@ -21,3 +21,34 @@ composer create-project dillonsmart/tetherphp ./
 
 ## Usage
 To get started with TetherPHP, please refer to the [documentation](https://tetherphp.com/docs).
+
+## Local Development
+For local development of TetherPHP and the core TetherPHP framework files [tetherphp-core](https://github.com/Dillonsmart/tetherphp-core) create a composer.local.json file, and add the following code to it:
+
+```json
+{
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../tetherphp-core"
+        }
+    ],
+    "require": {
+        "dillonsmart/tetherphp-core": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+```
+
+Then run the following command in your terminal:
+
+```bash
+COMPOSER=composer.local.json composer update
+```
+
+You can also create an alias for the command to make it easier to run:
+
+```bash
+alias composer-local='COMPOSER=composer.local.json composer update'
+```

@@ -4,29 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2b399385a1cee08c956f9f0b5db2355f",
+    "content-hash": "03814e2c247a6eafe45228df526ee1ad",
     "packages": [
         {
             "name": "dillonsmart/tetherphp-core",
-            "version": "dev-main",
+            "version": "v0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Dillonsmart/tetherphp-core.git",
-                "reference": "b55bf0742605926a22f68b01d5aee14dc7a16c0e"
+                "reference": "6311b45211b1075cfca08893b14a26a9036d822a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Dillonsmart/tetherphp-core/zipball/b55bf0742605926a22f68b01d5aee14dc7a16c0e",
-                "reference": "b55bf0742605926a22f68b01d5aee14dc7a16c0e",
+                "url": "https://api.github.com/repos/Dillonsmart/tetherphp-core/zipball/6311b45211b1075cfca08893b14a26a9036d822a",
+                "reference": "6311b45211b1075cfca08893b14a26a9036d822a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1"
             },
-            "require-dev": {
-                "phpunit/phpunit": "^10.0"
-            },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "files": [
@@ -43,17 +39,15 @@
             "description": "The core framework files for TetherPHP.",
             "support": {
                 "issues": "https://github.com/Dillonsmart/tetherphp-core/issues",
-                "source": "https://github.com/Dillonsmart/tetherphp-core/tree/v0.1.5"
+                "source": "https://github.com/Dillonsmart/tetherphp-core/tree/v0.1.6"
             },
-            "time": "2025-08-26T18:31:48+00:00"
+            "time": "2025-08-28T18:31:50+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "dillonsmart/tetherphp-core": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
