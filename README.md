@@ -19,6 +19,15 @@ You can install TetherPHP using Composer. Run the following command in your term
 composer create-project dillonsmart/tetherphp ./
 ```
 
+Once installed, ensure you create a `.env` file in the root of your project by copying the provided `.env.example` file.
+
+Then, run the following command to install the necessary dependencies:
+
+```bash
+composer install
+```
+
+
 ## Usage
 To get started with TetherPHP, please refer to the [documentation](https://tetherphp.com/docs).
 
