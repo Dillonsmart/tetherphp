@@ -1,11 +1,59 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=TASA+Explorer:wght@400..800&display=swap');
+
+:root {
+    --gold: #bfa100;
+}
 
 body {
-    font-family: 'Playfair Display', serif;
+    font-family: "TASA Explorer", sans-serif;
     background-color: #f0f0f0;
     color: #333;
     margin: 0;
     padding: 0;
+}
+
+body.dark {
+    background-color: #1e1e1e;
+    color: #ccc;
+    --gold: #ffc600;
+}
+
+body.dark button {
+    color: #ccc;
+}
+
+.gold {
+    color: var(--gold);
+}
+
+body #lightmode-icon{
+    display: none;
+}
+
+body #darkmode-icon{
+    display: block;
+}
+
+body.dark #darkmode-icon{
+    display: none;
+}
+
+body.dark #lightmode-icon{
+    display: block;
+}
+
+.theme-toggle {
+    cursor: pointer;
+    border: none;
+    background: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.theme-toggle svg {
+    width: 1.4rem;
+    height: 1.4rem;
 }
 
 .container {
@@ -16,8 +64,6 @@ body {
 
 header {
     padding: 1.5rem 2rem 1rem 2rem;
-    background: #fff;
-    border-bottom: 1px solid #e0e0e0;
     margin-bottom: 2rem;
 }
 
@@ -58,6 +104,11 @@ header h1 {
     margin-bottom: 2.5rem;
 }
 
+.hero {
+    text-align: center;
+    margin: 8rem 0;
+}
+
 h1 {
     font-size: 3rem;
     margin-bottom: 1.5rem;
@@ -80,7 +131,7 @@ p {
 }
 
 a {
-    color: #ac7a26;
+    color: var(--gold);
     text-decoration: none;
     transition: color 0.2s;
 }
@@ -96,7 +147,7 @@ li {
 }
 
 a:hover {
-    color: #8a5c1b;
+    color: var(--gold);
 }
 
 .flex {

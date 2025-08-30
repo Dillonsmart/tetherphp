@@ -6,4 +6,11 @@
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/app.css">
 </head>
-<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="https://tetherphp.com/docs">Documentation</a></li>
+        </ul>
+    </nav>
+</header>
+<body class="dark">

@@ -24,3 +24,7 @@ function handlePreClick(element) {
         duration: 3000
     }));
 }
+
+document.querySelector('.theme-toggle').addEventListener('click', function() {
+    document.body.classList.toggle('dark');
+})
