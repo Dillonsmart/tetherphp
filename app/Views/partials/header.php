@@ -12,7 +12,7 @@
     <!-- styles -->
     <link rel="stylesheet" href="/css/app.css">
 </head>
-<header>
+<header class="flex justify-end px-6 py-4">
     <nav>
         <ul>
             <li><a href="https://tetherphp.com/docs">Documentation</a></li>
