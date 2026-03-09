@@ -2,10 +2,10 @@
 
 namespace Responders;
 
-class Home extends Responder
+class {{className}} extends Responder
 {
     public function __invoke(array $data = []): string
     {
-        return $this->view('pages.home.index', $data);
+        // return $this->view('path.to.view', $data);
     }
 }

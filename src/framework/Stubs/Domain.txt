@@ -2,7 +2,7 @@
 
 namespace Domains;
 
-class Domain
+class {{className}} extends Domain
 {
     public function handle(): array
     {

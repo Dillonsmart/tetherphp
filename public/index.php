@@ -13,4 +13,4 @@ $kernel = new Kernel($router);
 
 $response = $kernel->run();
 
-print_r($response);
+echo $response;

@@ -2,9 +2,17 @@
 
 namespace Actions;
 
-use TetherPHP\framework\Interfaces\ResponseInterface;
+use Domains\Domain;
+use TetherPHP\framework\Interfaces\ResponderInterface;
 
 class Action
 {
-    protected ResponseInterface $responder;
+    protected Domain $domain;
+
+    protected ResponderInterface $responder;
+
+    protected function respond(array $data = []): string
+    {
+        return ($this->responder)($data);
+    }
 }

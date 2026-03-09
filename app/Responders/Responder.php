@@ -2,43 +2,34 @@
 
 namespace Responders;
 
-use TetherPHP\framework\Interfaces\ResponseInterface;
+use TetherPHP\framework\Interfaces\ResponderInterface;
 use TetherPHP\framework\Requests\Request;
 
-class Responder implements ResponseInterface
+class Responder implements ResponderInterface
 {
     public function __construct(protected Request $request)
     {
-        // nothing to see here
     }
 
-    protected function response(): static
-    {
-        return $this;
-    }
-
-    public function view(string $viewName, ?array $data = []): string
+    public function view(string $viewName, array $data = []): string
     {
         $viewPath = str_replace('.', '/', $viewName);
+        $file = views_dir() . "{$viewPath}.php";
 
-        // Assuming the view is a file path, include it and capture the output
-        ob_start();
-        extract($data);
-
-        $theView = views_dir() . "{$viewPath}.php";
-
-        if(!file_exists($theView)) {
-            include(core_views() . 'errors/viewNotFound.php');
-            die();
+        if (!file_exists($file)) {
+            throw new \RuntimeException("View not found: {$viewName}");
         }
 
-        include $theView;
+        ob_start();
+        extract($data);
+        include $file;
         return ob_get_clean();
     }
 
     public function json(array $data, int $statusCode = 200): string
     {
         http_response_code($statusCode);
+        header('Content-Type: application/json');
         return json_encode($data);
     }
 }

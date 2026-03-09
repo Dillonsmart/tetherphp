@@ -1,0 +1,19 @@
+{
+  "name": "dillonsmart/tetherphp-core",
+  "description": "The core framework files for TetherPHP.",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "TetherPHP\\": ""
+    },
+    "files": [
+      "framework/Helpers/GlobalFunctions.php"
+    ]
+  },
+  "require": {
+    "php": ">=8.4"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
