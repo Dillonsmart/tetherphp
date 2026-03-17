@@ -2,4 +2,31 @@
 
 body {
     color: #2b2b2b;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark body {
+    background-color: #030712;
+    color: #f3f4f6;
+}
+
+html.dark a {
+    color: #f3f4f6;
+}
+
+html.dark pre {
+    background-color: #111827;
+    border: 1px solid #1f2937;
+}
+
+html.dark header {
+    border-bottom-color: #1f2937;
+}
+
+#theme-toggle:hover {
+    background-color: #e5e7eb;
+}
+
+html.dark #theme-toggle:hover {
+    background-color: #1f2937;
 }
