@@ -66,7 +66,7 @@ A plain `composer install` in this directory is the usual cause of "my framework
 
 | File                          | Tracked | Purpose                                    |
 | ----------------------------- | ------- | ------------------------------------------ |
-| `composer.json`               | yes     | the real published dependency              |
+| `composer.json`               | yes     | the real published dependency (`^0.3.1` — `0.3.0` was published from a stale commit and must be skipped) |
 | `composer.local.json.example` | yes     | the template for the linked setup          |
 | `composer.local.json`         | no      | your local overlay                         |
 | `composer.local.lock`         | no      | the overlay's lock                         |
