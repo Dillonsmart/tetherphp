@@ -12,6 +12,13 @@ This repository is the application that `composer create-project dillonsmart/tet
 Because this is a `create-project` template, everything committed here is inherited by every application generated
 from it. Keep it a starting point, not a showcase.
 
+## Design constraints
+
+TetherPHP is built on six core principles, summarised in `AGENTS.md` and carried in full by the
+**tetherphp-principles** skill in the `tetherphp-core` repository. The ones that shape this repository most:
+**Explicit Over Magic** — `Request → Route → Action → Domain → Responder → Response` must stay traceable by reading —
+and **One Obvious Way**, which is why the skeleton ships one convention rather than demonstrating several.
+
 ## Layout
 
 ```

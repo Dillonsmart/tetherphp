@@ -14,4 +14,4 @@ if (empty($args)) {
 
 $command = $args[0];
 
-new Console($command)->executeCommand(array_slice($args, 1), []);
+exit(new Console($command)->executeCommand(array_slice($args, 1), []));
