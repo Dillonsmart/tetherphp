@@ -11,7 +11,7 @@ point rather than a showcase.
 ## The six core principles
 
 Every design decision answers to these. The full charter lives in the `tetherphp-core` repository
-(`.claude/skills/tetherphp-principles/`); the short form:
+(`docs/agents/principles.md`); the short form:
 
 1. **Human First** — code should be obvious to a human. No cleverness for cleverness' sake.
 2. **Agent Ready** — everything a human can understand, an agent should be able to understand. Predictable naming,
@@ -42,13 +42,15 @@ npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --watch
 
 Requires **PHP >= 8.4**.
 
-## Skills
+## Guides
 
-Detailed working knowledge lives in `.claude/skills/`. Read the relevant one before making changes:
+Detailed working knowledge lives in `docs/agents/`. These are plain markdown and tool-agnostic — read the relevant
+one before making changes:
 
-- **skeleton-app** — ADR conventions, routing behaviour, views, environment, assets, and what belongs here versus in
-  the framework package.
-- **linked-core-dev** — developing against a local `tetherphp-core` checkout, and returning to the published package.
+- [`docs/agents/application.md`](docs/agents/application.md) — ADR conventions, routing behaviour, views,
+  environment, assets, and what belongs here versus in the framework package.
+- [`docs/agents/linked-core-development.md`](docs/agents/linked-core-development.md) — developing against a local
+  `tetherphp-core` checkout, and returning to the published package.
 
 ## Structure
 
@@ -89,7 +91,7 @@ skill for changing framework code alongside application code.
 
 ## Keeping documentation current
 
-The skills in `.claude/skills/` are part of the source, not documentation about it. When a change makes one of them
+The guides in `docs/agents/` are part of the source, not documentation about it. When a change makes one of them
 inaccurate — a new `app/` directory and its PSR-4 mapping, a routing behaviour change, a different asset pipeline —
 update the skill in the **same commit** as the change, along with this file and `README.md` where they are affected.
-A skill that has drifted is worse than no skill.
+A guide that has drifted is worse than no guide.

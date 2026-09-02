@@ -1,9 +1,6 @@
----
-name: linked-core-dev
-description: Point this application at a local tetherphp-core checkout so framework and application changes can be made together, and switch back to the published package. Use when a task needs framework code changed, when framework edits appear to have no effect, or when composer install unexpectedly replaces the linked core.
----
+# Developing against a local framework checkout
 
-# Developing against a local tetherphp-core
+> Read this when a task needs framework code changed, when framework edits appear to have no effect, or when `composer install` unexpectedly replaces the linked core.
 
 The framework lives in the separate `dillonsmart/tetherphp-core` repository and is normally installed from Packagist.
 To change framework and application code together, install core from a local checkout instead.
@@ -90,7 +87,7 @@ composer install
 
 Do this before testing anything release-shaped. Path resolution inside the framework differs between a symlinked
 checkout and a real `vendor/` install, so a linked checkout cannot prove that a framework change works for an actual
-consumer — see the `core-release` skill in the core repository.
+consumer — see `docs/agents/releasing.md` in the core repository.
 
 ## Never patch vendor
 
@@ -98,7 +95,7 @@ consumer — see the `core-release` skill in the core repository.
 copy is discarded on the next install; editing through the symlink is really editing the core repository, so commit it
 there.
 
-## Keeping this skill current
+## Keeping this guide current
 
 If the linked-development mechanism changes — a different overlay filename, a merge plugin replacing the manual
 duplication, a change to what is gitignored — update this file and `composer.local.json.example` in the same commit,

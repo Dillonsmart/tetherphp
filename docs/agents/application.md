@@ -1,9 +1,6 @@
----
-name: skeleton-app
-description: Conventions for the TetherPHP skeleton application — the ADR (Action-Domain-Responder) structure, routing, views, console commands and asset builds. Use when adding or changing an Action, Domain, Responder, route, view or command in this repository, or when deciding whether a change belongs here or in the framework package.
----
+# Working in the skeleton application
 
-# Working in the TetherPHP skeleton
+> Read this before adding or changing an Action, Domain, Responder, route, view or command, or when deciding whether a change belongs here or in the framework package.
 
 This repository is the application that `composer create-project dillonsmart/tetherphp` installs. The framework is
 **not** here — it is the `dillonsmart/tetherphp-core` Composer package, installed into
@@ -128,11 +125,11 @@ php -S 127.0.0.1:8000 -t public
 | Actions, Domains, Responders, views, routes, assets, `.env`  | here              |
 | Routing, request, session, CSRF, logging, console, stubs     | `tetherphp-core`  |
 
-If a change needs framework code, see the `linked-core-dev` skill — do not vendor-patch
+If a change needs framework code, see the linked-development guide (`docs/agents/linked-core-development.md`) — do not vendor-patch
 `vendor/dillonsmart/tetherphp-core`, as it is overwritten on the next install.
 
-## Keeping this skill current
+## Keeping this guide current
 
-These skills are part of the source. When a change makes anything above inaccurate — a new `app/` directory and its
+These guides are part of the source. When a change makes anything above inaccurate — a new `app/` directory and its
 PSR-4 mapping, a routing behaviour change, a new generator, a different asset pipeline — update this file in the same
 commit, along with `README.md` and `composer.local.json.example` if the autoload roots moved.
