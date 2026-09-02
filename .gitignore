@@ -5,6 +5,8 @@ storage/private/*
 storage/logs/*
 TODO.md
 vendor
-composer.local.json
-composer.local.lock
 node_modules
+composer.lock
+composer.local.json
+!composer.local.json.example
+composer.local.lock
