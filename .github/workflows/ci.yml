@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  boot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Install from the published core, as a user would
+        run: composer install --no-interaction --no-progress
+
+      - name: Lint
+        run: find app routes public -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Boot the application
+        run: |
+          cp .env.example .env
+          printf 'APP_NAME=CI\nAPP_DEBUG=true\n' > .env
+          php -S 127.0.0.1:8000 -t public &
+          sleep 2
+          # a 200 proves nothing on its own — the error view is served with a 200
+          # whenever the response code is not set, so assert on the body too
+          body=$(curl -s http://127.0.0.1:8000/)
+          echo "$body" | head -5
+          if echo "$body" | grep -q '500 Internal Server Error'; then
+            echo "::error::Home page served the error view"; exit 1
+          fi
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8000/)" = "200"
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8000/does-not-exist)" = "404"
+
+      - name: Console
+        run: php tether help
