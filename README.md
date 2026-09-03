@@ -9,7 +9,7 @@
 
 TetherPHP is a lightweight, flexible framework for building web applications in PHP using the ADR (Action-Domain-Responder) architecture. It provides a simple and intuitive way to structure your application, making it easy to develop and maintain.
 
-[Follow the development on X](https://x.com/d2sdev)
+[Follow the development on X](https://x.com/DS01Builds)
 
 ## Features
 
