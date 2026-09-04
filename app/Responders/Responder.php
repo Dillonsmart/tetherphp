@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Responders;
 
 use TetherPHP\framework\Interfaces\ResponderInterface;
@@ -11,6 +13,9 @@ class Responder implements ResponderInterface
     {
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function view(string $viewName, array $data = []): string
     {
         $viewPath = str_replace('.', '/', $viewName);
@@ -20,16 +25,48 @@ class Responder implements ResponderInterface
             throw new \RuntimeException("View not found: {$viewName}");
         }
 
-        ob_start();
-        extract($data);
-        include $file;
-        return ob_get_clean();
+        return $this->renderInIsolation($file, $data);
     }
 
+    /**
+     * Renders a view with $data in scope.
+     *
+     * The extraction happens inside a closure holding nothing worth clobbering,
+     * because extract() in the calling scope could rebind $file *after* it had
+     * been checked — view data containing a 'file' key would then include an
+     * arbitrary path. EXTR_SKIP additionally refuses to overwrite what is there.
+     *
+     * @param array<string, mixed> $data
+     */
+    private function renderInIsolation(string $__file, array $__data): string
+    {
+        $render = static function () use ($__file, $__data): string {
+            extract($__data, EXTR_SKIP);
+            unset($__data);
+
+            ob_start();
+            include $__file;
+
+            return (string) ob_get_clean();
+        };
+
+        return $render();
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
     public function json(array $data, int $statusCode = 200): string
     {
         http_response_code($statusCode);
         header('Content-Type: application/json');
-        return json_encode($data);
+
+        $encoded = json_encode($data);
+
+        if ($encoded === false) {
+            throw new \RuntimeException('Could not encode response: ' . json_last_error_msg());
+        }
+
+        return $encoded;
     }
 }

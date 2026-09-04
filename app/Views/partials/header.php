@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><?php echo $pageTitle ?? env('APP_NAME'); ?></title>
+    <title><?php echo htmlspecialchars($pageTitle ?? (string) env('APP_NAME')); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="<?php echo $metaDescription ?? env('APP_NAME'); ?>" />
+    <meta name="description" content="<?php echo htmlspecialchars($metaDescription ?? (string) env('APP_NAME')); ?>" />
 
     <link rel="stylesheet" href="/css/app.css">
 </head>

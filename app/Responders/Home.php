@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Responders;
 
 class Home extends Responder
