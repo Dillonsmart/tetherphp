@@ -40,7 +40,7 @@ npm install
 npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --watch
 ```
 
-Requires **PHP >= 8.4**.
+Requires **PHP >= 8.5**.
 
 ## Guides
 

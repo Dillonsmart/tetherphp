@@ -8,8 +8,8 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.4",
-        "dillonsmart/tetherphp-core": "^0.4"
+        "php": "^8.5",
+        "dillonsmart/tetherphp-core": "^0.5"
     },
     "autoload": {
         "psr-4": {
