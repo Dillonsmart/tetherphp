@@ -42,6 +42,19 @@ npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --watch
 
 Requires **PHP >= 8.5**.
 
+## Docker
+
+```bash
+docker compose up --build     # http://localhost:8000
+```
+
+`php:8.5-apache`, one container, serving `public/`. Everything above the document root — `.env`, `app/`, `vendor/` —
+stays unreachable over HTTP.
+
+**`public/.htaccess` is load-bearing.** Every request that is not a real file goes to `index.php`; without it a real
+web server 404s every route. PHP's built-in server falls back to `index.php` on its own, which hides the problem
+during local development — so test routing changes against the container or Apache, not only `php -S`.
+
 ## Guides
 
 Detailed working knowledge lives in `docs/agents/`. These are plain markdown and tool-agnostic — read the relevant

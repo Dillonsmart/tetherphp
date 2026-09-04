@@ -1,0 +1,21 @@
+# Front controller.
+#
+# Every request that is not a real file or directory goes to index.php, which
+# is what the Router expects. PHP's built-in server falls back to index.php on
+# its own, so this gap only shows up on a real web server — Apache, or the
+# Docker image, both of which would otherwise 404 every route.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Serve existing files and directories as-is
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Nothing outside public/ is reachable, but be explicit about dotfiles
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

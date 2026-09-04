@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:80"
+    volumes:
+      # live-edit the application without rebuilding
+      - .:/var/www/html
+      # keep the image's vendor rather than shadowing it with the host's
+      - /var/www/html/vendor
+    environment:
+      APP_NAME: TetherPHP
+      APP_DEBUG: "true"

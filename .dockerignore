@@ -1,0 +1,16 @@
+.git
+.github
+.idea
+.claude
+vendor
+node_modules
+storage/logs/*
+composer.lock
+composer.local.json
+composer.local.lock
+.env
+Dockerfile
+compose.yaml
+.dockerignore
+docs
+*.md
