@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use TetherPHP\Kernel;
 use TetherPHP\Router;
 
@@ -9,8 +11,4 @@ $router = new Router();
 
 (require __DIR__ . '/../routes/web.php')($router);
 
-$kernel = new Kernel($router);
-
-$response = $kernel->run();
-
-echo $response;
+new Kernel($router)->run()->send();

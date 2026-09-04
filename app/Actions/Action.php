@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace Actions;
 
 use Domains\Domain;
-use TetherPHP\framework\Interfaces\ResponderInterface;
+use Responders\Responder;
+use TetherPHP\framework\Http\Response;
 
 class Action
 {
     protected Domain $domain;
 
-    protected ResponderInterface $responder;
+    protected Responder $responder;
 
-    protected function respond(array $data = []): string
+    /**
+     * @param array<string, mixed> $data
+     */
+    protected function respond(array $data = []): Response
     {
         return ($this->responder)($data);
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Responders;
 
+use TetherPHP\framework\Http\Response;
 use TetherPHP\framework\Interfaces\ResponderInterface;
 use TetherPHP\framework\Requests\Request;
 
@@ -16,7 +17,7 @@ class Responder implements ResponderInterface
     /**
      * @param array<string, mixed> $data
      */
-    public function view(string $viewName, array $data = []): string
+    public function view(string $viewName, array $data = [], int $status = 200): Response
     {
         $viewPath = str_replace('.', '/', $viewName);
         $file = views_dir() . "{$viewPath}.php";
@@ -25,7 +26,7 @@ class Responder implements ResponderInterface
             throw new \RuntimeException("View not found: {$viewName}");
         }
 
-        return $this->renderInIsolation($file, $data);
+        return Response::html($this->renderInIsolation($file, $data), $status);
     }
 
     /**
@@ -56,17 +57,8 @@ class Responder implements ResponderInterface
     /**
      * @param array<string, mixed> $data
      */
-    public function json(array $data, int $statusCode = 200): string
+    public function json(array $data, int $statusCode = 200): Response
     {
-        http_response_code($statusCode);
-        header('Content-Type: application/json');
-
-        $encoded = json_encode($data);
-
-        if ($encoded === false) {
-            throw new \RuntimeException('Could not encode response: ' . json_last_error_msg());
-        }
-
-        return $encoded;
+        return Response::json($data, $statusCode);
     }
 }

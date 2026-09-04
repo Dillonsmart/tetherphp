@@ -65,7 +65,10 @@ routes/web.php                  route definitions
 storage/                        logs and application storage
 ```
 
-An Action is invokable and **returns a string** — `Kernel::run()`'s return value is echoed as the response body.
+An Action implements `ActionInterface` and **returns a `Response`**. `Kernel::run()` returns one too, and
+`public/index.php` calls `send()` on it — that is the only place anything is written to the client.
+
+Route parameters arrive on the request: `$this->request->params['slug']`. Do not re-parse the URI.
 
 ## Things that bite
 

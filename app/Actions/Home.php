@@ -6,6 +6,7 @@ namespace Actions;
 
 use Domains\Home as HomeDomain;
 use Responders\Home as HomeResponder;
+use TetherPHP\framework\Http\Response;
 use TetherPHP\framework\Interfaces\ActionInterface;
 use TetherPHP\framework\Requests\Request;
 
@@ -17,9 +18,8 @@ class Home extends Action implements ActionInterface
         $this->responder = new HomeResponder($request);
     }
 
-    public function __invoke(): string
+    public function __invoke(): Response
     {
-        $data = $this->domain->handle();
-        return $this->respond($data);
+        return $this->respond($this->domain->handle());
     }
 }

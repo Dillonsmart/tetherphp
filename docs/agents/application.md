@@ -41,10 +41,11 @@ ensures a CSRF token exists, all before routing.
 
 ## ADR conventions
 
-- An **Action** is invokable (`__invoke()`), takes the `Request` in its constructor, and returns a string. It
-  coordinates; it should not contain business logic or build markup.
+- An **Action** implements `ActionInterface`, takes the `Request` in its constructor, and returns a `Response`. It
+  coordinates; it should not contain business logic or build markup. Dynamic route parameters are on the request as
+  `$this->request->params['slug']` — never re-parse the URI.
 - A **Domain** holds the logic and knows nothing about HTTP.
-- A **Responder** renders — `view()` or `json()`.
+- A **Responder** renders — `view()` or `json()`, both returning a `Response`. Pass a status as `view($name, $data, 404)` rather than calling `http_response_code()`.
 
 Generate the trio rather than hand-rolling it:
 
