@@ -55,6 +55,7 @@ npm install && npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.cs
 │   ├── Actions/        # Request handlers
 │   ├── Commands/       # Your console commands (created by make:command)
 │   ├── Domains/        # Business logic
+│   │   └── Results/    # The value objects Domains return
 │   ├── Responders/     # Response formatters
 │   └── Views/          # Templates and partials
 ├── public/             # Web root (index.php, compiled assets)

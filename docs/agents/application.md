@@ -23,6 +23,7 @@ app/
 ├── Actions/      # Actions\      — receive the Request, invoke a Domain, hand off to a Responder
 ├── Commands/     # Commands\     — console commands (created by make:command)
 ├── Domains/      # Domains\      — business logic, no HTTP knowledge
+│   └── Results/  # Domains\Results\ — the value objects Domains return
 ├── Responders/   # Responders\   — turn a result into a response (view or JSON)
 └── Views/        # Views\        — templates, partials, error pages
 public/           # web root: index.php, compiled css/js
@@ -33,8 +34,9 @@ storage/          # logs and application storage
 
 ## Request lifecycle
 
-`public/index.php` loads the autoloader, builds a `Router`, applies `routes/web.php` to it, and hands it to
-`Kernel::run()`, whose return value is echoed. So **an Action must return a string** — it is the response body.
+`public/index.php` loads the autoloader, builds a `Router`, applies `routes/web.php` to it, and calls `send()` on
+the `Response` that `Kernel::run()` returns. So **an Action must return a `Response`** — `send()` is the only place
+anything is written to the client.
 
 `Kernel` boots `Env`, defines `VERSION`/`VERSION_NAME`, installs error and exception handlers, starts a `Session` and
 ensures a CSRF token exists, all before routing.
@@ -44,8 +46,45 @@ ensures a CSRF token exists, all before routing.
 - An **Action** implements `ActionInterface`, takes the `Request` in its constructor, and returns a `Response`. It
   coordinates; it should not contain business logic or build markup. Dynamic route parameters are on the request as
   `$this->request->params['slug']` — never re-parse the URI.
-- A **Domain** holds the logic and knows nothing about HTTP.
+- A **Domain** holds the logic and knows nothing about HTTP. `handle()` returns a **`DomainResult`** — never an
+  array. See below.
 - A **Responder** renders — `view()` or `json()`, both returning a `Response`. Pass a status as `view($name, $data, 404)` rather than calling `http_response_code()`.
+
+### Domains return a result, not an array
+
+`Domain::handle()` used to return `array<string, mixed>`, and the Responder passed that array straight to the view,
+where `extract()` turned its keys into template variables. So the array's keys *were* the view's variable names:
+renaming `$tagline` in a template meant editing `Domains\Home`. That is the coupling the Responder exists to absorb,
+and while it lasted the Responder did nothing but forward its argument.
+
+A Domain now returns a `final readonly` value object under `Domains\Results\`, implementing
+`TetherPHP\framework\Interfaces\DomainResult` (an empty marker — it exists so `handle()` and `Action::respond()`
+have a type). The Responder translates it:
+
+```php
+// app/Domains/Results/Home.php — named for the domain
+final readonly class Home implements DomainResult
+{
+    public function __construct(public string $name, public string $description) {}
+}
+
+// app/Responders/Home.php — the one place view variables are named
+public function __invoke(HomeResult $result): Response
+{
+    return $this->view('pages.home.index', [
+        'appName' => $result->name,
+        'tagline' => $result->description,
+    ]);
+}
+```
+
+Two rules follow, and both are the point of the change:
+
+- **Only a Responder may name a view variable.** If a Domain knows a template calls something `$tagline`, the
+  separation is gone again.
+- **One result type per outcome.** A feature that can miss returns a different class when it misses, and the
+  Responder picks the view and the status from the type it was handed. An array with a `found` flag in it is the
+  shape this change exists to remove.
 
 Generate the trio rather than hand-rolling it:
 

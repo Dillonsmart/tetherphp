@@ -71,7 +71,8 @@ one before making changes:
 app/Actions/      Actions\      receive the Request, invoke a Domain, hand off to a Responder
 app/Commands/     Commands\     console commands (created by make:command)
 app/Domains/      Domains\      business logic, no HTTP knowledge
-app/Responders/   Responders\   turn a result into a response
+app/Domains/Results/            the value objects Domains return
+app/Responders/   Responders\   turn a result into a response, naming its view variables
 app/Views/        Views\        templates, partials, error pages
 public/                         web root: index.php, compiled assets
 routes/web.php                  route definitions

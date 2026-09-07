@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Domains;
 
-class Domain
+use TetherPHP\framework\Interfaces\DomainResult;
+
+abstract class Domain
 {
-    public function handle(): array
-    {
-        return [];
-    }
+    abstract public function handle(): DomainResult;
 }

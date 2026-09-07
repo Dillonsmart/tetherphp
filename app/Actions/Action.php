@@ -7,6 +7,7 @@ namespace Actions;
 use Domains\Domain;
 use Responders\Responder;
 use TetherPHP\framework\Http\Response;
+use TetherPHP\framework\Interfaces\DomainResult;
 
 class Action
 {
@@ -14,11 +15,8 @@ class Action
 
     protected Responder $responder;
 
-    /**
-     * @param array<string, mixed> $data
-     */
-    protected function respond(array $data = []): Response
+    protected function respond(DomainResult $result): Response
     {
-        return ($this->responder)($data);
+        return ($this->responder)($result);
     }
 }

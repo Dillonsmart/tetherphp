@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Domains;
 
+use Domains\Results\Home as HomeResult;
+
 class Home extends Domain
 {
-    public function handle(): array
+    public function handle(): HomeResult
     {
-        return [
-            'appName' => env('APP_NAME'),
-            'tagline' => 'An application built with TetherPHP.',
-        ];
+        return new HomeResult(
+            name: env('APP_NAME'),
+            description: 'An application built with TetherPHP.',
+        );
     }
 }
