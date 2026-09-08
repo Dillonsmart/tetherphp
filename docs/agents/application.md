@@ -30,6 +30,7 @@ public/           # web root: index.php, compiled css/js
 resources/css/    # Tailwind source
 routes/web.php    # route definitions
 storage/          # logs and application storage
+tether            # console entry point — a shim over vendor/bin/tether
 ```
 
 ## Request lifecycle
@@ -96,6 +97,29 @@ php tether make:command <name>
 Generated commands land in `app/Commands/` under the `Commands\` namespace. That PSR-4 mapping must stay in
 `composer.json` (and in `composer.local.json.example`) — without it `Console::registerCommands()` cannot autoload them
 and they disappear from `php tether help` with no error at all.
+
+### The `tether` file
+
+`tether` in the project root holds no console code. `tetherphp-core` declares `bin/tether` in its `composer.json`, so
+Composer writes a proxy to `vendor/bin/tether` on install, and the root file forwards to that proxy:
+
+```php
+$binary = __DIR__ . '/vendor/bin/tether';
+// ...
+return require $binary;
+```
+
+It exists so `php tether help` still works from the project root, and so a generated application does not carry its
+own copy of the console bootstrap that would drift from the framework's. `php vendor/bin/tether help` is the same
+program.
+
+Two consequences:
+
+- Changing how the console boots — argument parsing, the autoloader lookup, the exit code — is a change to
+  `bin/tether` in `tetherphp-core`, not to this file.
+- The shim resolves only against a core release that declares the `bin`. Against an older one `vendor/bin/tether` is
+  never written and the shim exits 1 telling you to run `composer install`, so bump the constraint in `composer.json`
+  when adopting it.
 
 ## Routing
 
@@ -164,6 +188,7 @@ php -S 127.0.0.1:8000 -t public
 | ----------------------------------------------------------- | ----------------- |
 | Actions, Domains, Responders, views, routes, assets, `.env`  | here              |
 | Routing, request, session, CSRF, logging, console, stubs     | `tetherphp-core`  |
+| The console binary itself (`bin/tether`)                     | `tetherphp-core`  |
 
 If a change needs framework code, see the linked-development guide (`docs/agents/linked-core-development.md`) — do not vendor-patch
 `vendor/dillonsmart/tetherphp-core`, as it is overwritten on the next install.

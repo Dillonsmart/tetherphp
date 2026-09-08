@@ -1,17 +1,21 @@
 #!/usr/bin/env php
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php';
+declare(strict_types=1);
 
-use TetherPHP\framework\Modules\Console;
+/*
+ * The console itself lives in the framework package, at
+ * vendor/dillonsmart/tetherphp-core/bin/tether. This file is only a shim so
+ * that `php tether` keeps working from the project root; Composer generates
+ * the proxy below when it installs the package, and the proxy hands the
+ * autoloader to the real binary.
+ */
 
-$args = array_slice($argv, 1);
+$binary = __DIR__ . '/vendor/bin/tether';
 
-if (empty($args)) {
-    echo "No arguments provided.\n";
+if (!is_file($binary)) {
+    fwrite(STDERR, "TetherPHP console not found at vendor/bin/tether. Run composer install.\n");
     exit(1);
 }
 
-$command = $args[0];
-
-exit(new Console($command)->executeCommand(array_slice($args, 1), []));
+return require $binary;

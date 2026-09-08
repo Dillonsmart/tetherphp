@@ -62,11 +62,21 @@ alias composer-local='COMPOSER=composer.local.json composer'
 
 A plain `composer install` in this directory is the usual cause of "my framework edits stopped working".
 
+**The `vendor/bin/` proxies are generated, not symlinked.** Edits inside `bin/tether` in the core checkout take effect
+immediately like any other file, but *adding or removing* the `bin` declaration in core's `composer.json` only reaches
+`vendor/bin/tether` on the next overlay update:
+
+```bash
+COMPOSER=composer.local.json composer update dillonsmart/tetherphp-core
+```
+
+Until then `php tether` reports the console as missing even though the core checkout has it.
+
 ## What is and is not committed
 
 | File                          | Tracked | Purpose                                    |
 | ----------------------------- | ------- | ------------------------------------------ |
-| `composer.json`               | yes     | the real published dependency (`^0.3.1` — `0.3.0` was published from a stale commit and must be skipped) |
+| `composer.json`               | yes     | the real published dependency, currently `^0.7`. Constrain to a patch (`^0.3.1`, never `^0.3`) whenever a version has been published from a stale commit and must be skipped |
 | `composer.local.json.example` | yes     | the template for the linked setup          |
 | `composer.local.json`         | no      | your local overlay                         |
 | `composer.local.lock`         | no      | the overlay's lock                         |

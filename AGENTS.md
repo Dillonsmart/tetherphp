@@ -77,6 +77,7 @@ app/Views/        Views\        templates, partials, error pages
 public/                         web root: index.php, compiled assets
 routes/web.php                  route definitions
 storage/                        logs and application storage
+tether                          console entry point — a shim over vendor/bin/tether
 ```
 
 An Action implements `ActionInterface` and **returns a `Response`**. `Kernel::run()` returns one too, and
@@ -94,6 +95,9 @@ Route parameters arrive on the request: `$this->request->params['slug']`. Do not
   mirrored in the other, or classes resolve in one mode and not the other.
 - Without the `Commands\` mapping, `Console::registerCommands()` cannot autoload generated commands and they vanish
   from `php tether help` with no error at all.
+- **`tether` holds no console code.** The binary is `bin/tether` in `tetherphp-core`, which Composer proxies into
+  `vendor/bin/tether`; the file here only forwards to it. A change to how the console boots belongs in the framework
+  package, and the shim needs a core release that declares the `bin` before it can resolve.
 - `composer.lock` is deliberately **not** committed — `create-project` resolves fresh.
 
 ## Where a change belongs
@@ -102,6 +106,7 @@ Route parameters arrive on the request: `$this->request->params['slug']`. Do not
 | ------------------------------------------------------------ | ----------------- |
 | Actions, Domains, Responders, views, routes, assets, `.env`   | here              |
 | Routing, request, session, CSRF, logging, console, stubs      | `tetherphp-core`  |
+| The console binary itself (`bin/tether`)                      | `tetherphp-core`  |
 
 Never patch `vendor/dillonsmart/tetherphp-core` — it is overwritten on the next install. See the **linked-core-dev**
 skill for changing framework code alongside application code.
