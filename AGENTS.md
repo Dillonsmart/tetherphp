@@ -81,14 +81,18 @@ app/Responders/   Responders\   turn a result into a response, naming its view v
 app/Views/        Views\        templates, partials, error pages
 public/                         web root: index.php, compiled assets
 routes/web.php                  route definitions
+routes/middleware.php           what every request passes through, outermost first
 storage/                        logs and application storage
 tests/            Tests\       Unit (a Domain alone) and Feature (through the Kernel)
 tether                          console entry point — a shim over vendor/bin/tether
 ```
 
-`public/index.php` also composes the middleware that runs around every request — the skeleton ships
-`VerifyCsrfToken`, and an API-only application deletes it and boots without a session. The framework starts no
-session and checks no token unless asked.
+`routes/middleware.php` lists what every request passes through — the skeleton ships `VerifyCsrfToken`, and an
+API-only application deletes it and boots without a session. The framework starts no session and checks no token
+unless asked. `php tether explain <uri>` shows the middleware alongside the route it resolves to.
+
+**Building a middleware must have no side effects**, because the console builds the list to report it. `Session`
+starts on first use rather than on construction for this reason.
 
 An Action implements `ActionInterface` and **returns a `Response`**. `Kernel::run()` returns one too, and
 `public/index.php` calls `send()` on it — that is the only place anything is written to the client. It also

@@ -30,6 +30,7 @@ public/           # web root: index.php, compiled css/js
 tests/            # Tests\ — Unit/ and Feature/
 resources/css/    # Tailwind source
 routes/web.php    # route definitions
+routes/middleware.php  # what every request passes through
 storage/          # logs and application storage
 tether            # console entry point — a shim over vendor/bin/tether
 ```
@@ -56,17 +57,18 @@ environment file per deployment, a log directory outside the project — and not
 
 ### Middleware
 
-The fourth argument is the list of middleware that runs around everything, outermost first, in the order written:
+`routes/middleware.php` lists what every request passes through, outermost first, in the order written:
 
 ```php
-$session = new Session();
-
-$middleware = [
-    new VerifyCsrfToken($session, $log),
-];
-
-new Kernel($router, $env, $log, $middleware)->run()->send();
+return function (Env $env, Log $log): array {
+    return [
+        new VerifyCsrfToken(new Session(), $log),
+    ];
+};
 ```
+
+It sits beside `routes/web.php` because the two answer the same kind of question: `web.php` says where a request
+goes, `middleware.php` says what it goes through on the way. `public/index.php` loads both.
 
 A middleware is one method — `__invoke(Request $request, \Closure $next): Response`. Call `$next($request)` to
 continue and you get the Response from the rest of the pipeline, to return, replace or add a header to. Return your
@@ -78,8 +80,15 @@ the way back out.
 
 **The framework starts no session and checks no CSRF token of its own accord.** The skeleton composes
 `VerifyCsrfToken` in because most applications serve forms; an application that does not — a token-authenticated API
-— deletes those lines and boots with no session at all. CSRF used to be validated inside `Request`, so it could not
-be turned off.
+— deletes the line and boots with no session at all. CSRF used to be validated inside `Request`, so it could not be
+turned off.
+
+**Building a middleware must have no side effects.** `php tether routes`, `explain` and `context` build this list to
+report what runs around a request, so a constructor that opens a connection or starts a session does it from a
+terminal too. Do the work in `__invoke()`. `Session` starts on first use rather than on construction for this
+reason, so holding one costs nothing.
+
+`php tether explain /some/uri` shows the middleware a request passes through before the route it resolves to.
 
 ## ADR conventions
 
@@ -237,8 +246,16 @@ Two suites, and the split is the ADR split:
 The base `TestCase` builds its own `Env` and `Log` rather than reading the `.env` on disk, so a test states the
 settings it depends on and never writes into `storage/`. That is only possible because the Kernel is handed both.
 
-It composes **no middleware**, so writes are not CSRF-challenged by default. Add `VerifyCsrfToken` to the list in
-`Tests\TestCase::send()` to test against the protection the application actually boots with.
+It composes **no middleware** by default, so writes are not CSRF-challenged and a feature test stays a single call —
+a test that had to mint a token before it could POST would be testing the middleware rather than the feature.
+Override `middleware()` to run against the real stack, as `tests/Feature/CsrfTest.php` does:
+
+```php
+protected function middleware(): array
+{
+    return (require __DIR__ . '/../../routes/middleware.php')($this->env(), $this->log());
+}
+```
 
 A status assertion alone is not enough: the error view is served with a 200 whenever the status was never set, so
 assert on the body too. `HomeTest` does.

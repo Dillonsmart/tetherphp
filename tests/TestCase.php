@@ -6,6 +6,7 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use TetherPHP\framework\Http\Response;
+use TetherPHP\framework\Interfaces\MiddlewareInterface;
 use TetherPHP\framework\Modules\Env;
 use TetherPHP\framework\Modules\Log;
 use TetherPHP\Kernel;
@@ -18,9 +19,9 @@ use TetherPHP\Router;
  * test states the settings it depends on and never writes into storage/. That
  * is only possible because the Kernel is handed both instead of finding them.
  *
- * No middleware is composed in, so writes are not CSRF-challenged. Add
- * VerifyCsrfToken to the list below to test against the protection the
- * application actually boots with.
+ * No middleware is composed in by default, so writes are not CSRF-challenged
+ * and most tests stay a single call. Override middleware() to test against
+ * what the application actually boots with.
  */
 abstract class TestCase extends PHPUnitTestCase
 {
@@ -65,11 +66,31 @@ abstract class TestCase extends PHPUnitTestCase
         $_SERVER['REQUEST_METHOD'] = $method;
         $_SERVER['REQUEST_URI'] = $uri;
 
-        $kernel = new Kernel($this->router, $this->env(), $this->log());
+        $kernel = new Kernel($this->router, $this->env(), $this->log(), $this->middleware());
 
         $this->kernels[] = $kernel;
 
         return $kernel->run();
+    }
+
+    /**
+     * What runs around the request under test.
+     *
+     * Empty by default: a feature test that had to mint a CSRF token before it
+     * could POST would be testing the middleware rather than the feature. To
+     * exercise the real stack — in a test that is about the protection —
+     * override this with the application's own declaration:
+     *
+     *     protected function middleware(): array
+     *     {
+     *         return (require __DIR__ . '/../routes/middleware.php')($this->env(), $this->log());
+     *     }
+     *
+     * @return list<MiddlewareInterface>
+     */
+    protected function middleware(): array
+    {
+        return [];
     }
 
     protected function env(): Env
