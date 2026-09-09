@@ -27,11 +27,15 @@ Every design decision answers to these. The full charter lives in the `tetherphp
 ## Setup
 
 ```bash
-cp .env.example .env          # Env::loadEnv() throws without it
+cp .env.example .env          # Env::fromFile() throws without it
 composer install
 php -S 127.0.0.1:8000 -t public
 php tether help
 ```
+
+The console is first-class: `tether routes`, `tether explain <uri>`, `tether inspect <class>` and `tether context`
+report on the application without changing it, and `tether make:action|domain|responder|feature|command` generate
+into it. `tether help <command>` prints what one takes.
 
 Assets are Tailwind, scanning `app/Views/**/*.php`:
 
@@ -81,7 +85,9 @@ tether                          console entry point — a shim over vendor/bin/t
 ```
 
 An Action implements `ActionInterface` and **returns a `Response`**. `Kernel::run()` returns one too, and
-`public/index.php` calls `send()` on it — that is the only place anything is written to the client.
+`public/index.php` calls `send()` on it — that is the only place anything is written to the client. It also
+constructs the `Env` and `Log` the Kernel is given: `new Kernel($router, $env, $log)`. The framework does not go
+looking for either, so which `.env` and which log directory are in play is answered by reading that one file.
 
 Route parameters arrive on the request: `$this->request->params['slug']`. Do not re-parse the URI.
 

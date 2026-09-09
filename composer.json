@@ -9,7 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "dillonsmart/tetherphp-core": "^0.7"
+        "dillonsmart/tetherphp-core": "^0.8"
     },
     "autoload": {
         "psr-4": {

@@ -35,12 +35,24 @@ tether            # console entry point — a shim over vendor/bin/tether
 
 ## Request lifecycle
 
-`public/index.php` loads the autoloader, builds a `Router`, applies `routes/web.php` to it, and calls `send()` on
-the `Response` that `Kernel::run()` returns. So **an Action must return a `Response`** — `send()` is the only place
-anything is written to the client.
+`public/index.php` loads the autoloader, builds a `Router`, applies `routes/web.php` to it, constructs the `Env` and
+the `Log` the application runs with, and calls `send()` on the `Response` that `Kernel::run()` returns. So **an Action
+must return a `Response`** — `send()` is the only place anything is written to the client.
 
-`Kernel` boots `Env`, defines `VERSION`/`VERSION_NAME`, installs error and exception handlers, starts a `Session` and
-ensures a CSRF token exists, all before routing.
+The environment and the log are **handed to the Kernel, not found by it**:
+
+```php
+$env = Env::fromFile(__DIR__ . '/../.env');
+$log = new Log(__DIR__ . '/../storage/logs');
+
+new Kernel($router, $env, $log)->run()->send();
+```
+
+Which `.env` is read and where logs are written are answered by reading this file. Change either line — a different
+environment file per deployment, a log directory outside the project — and nothing in the framework needs to know.
+
+`Kernel` then defines `VERSION`/`VERSION_NAME`, installs error and exception handlers, starts a `Session` and ensures
+a CSRF token exists, all before routing.
 
 ## ADR conventions
 
@@ -90,9 +102,38 @@ Two rules follow, and both are the point of the change:
 Generate the trio rather than hand-rolling it:
 
 ```bash
-php tether make:feature <name>
+php tether make:feature <name>      # Action, Domain, Result, Responder and view
+php tether make:action <name>
+php tether make:domain <name>       # writes the Result too — the Domain's return type names it
+php tether make:responder <name>    # writes the view too — the Responder renders it
 php tether make:command <name>
 ```
+
+Generating a piece at a time is the same writer as generating the whole feature, so the two cannot drift apart.
+`make:action` on its own says which of the Domain and Responder it names do not exist yet, because an Action that
+references a missing class fatals on the first request rather than at generation time.
+
+### Asking the application about itself
+
+```bash
+php tether routes                   # the resolved table, with anything that would 500 marked
+php tether explain /blog/hello      # the path that URI takes through the pipeline
+php tether inspect Home             # what a class is in ADR terms, and what it takes
+php tether context                  # the whole application as JSON, for agents and tooling
+php tether serve                    # PHP's built-in server, pointed at public/
+php tether test                     # forwards to the application's own PHPUnit
+```
+
+`explain` resolves the URI the way a request would — lowercased, query string dropped — and names the parameters a
+dynamic route would capture, so it answers "why does this 404?" without reading the matcher.
+
+`routes` and `context` both mark a route whose Action is missing or does not implement `ActionInterface`. That is
+otherwise a 500 nobody sees until someone requests the page.
+
+Where these link an Action to a Domain and Responder, they say **by convention** — an Action constructs its own in
+its constructor and may use anything. They report what is on disk under the conventional name.
+
+`php tether help <command>` prints what one command takes.
 
 Generated commands land in `app/Commands/` under the `Commands\` namespace. That PSR-4 mapping must stay in
 `composer.json` (and in `composer.local.json.example`) — without it `Console::registerCommands()` cannot autoload them
@@ -154,14 +195,19 @@ application's own copies take precedence. `$router->view()` uses dot notation (`
 
 ## Environment
 
-`.env` is required — `Env::loadEnv()` throws if it is missing. Copy it first on a fresh checkout:
+`.env` is required — `Env::fromFile()` throws, naming the path it looked at, if it is missing. Copy it first on a
+fresh checkout:
 
 ```bash
 cp .env.example .env
 ```
 
-Read values with `env('KEY')`. A missing key is logged and returns `null`. `APP_DEBUG=true` turns on error display;
-anything else suppresses it.
+Read values with `env('KEY')`, or `env('KEY', 'fallback')` for a default. A missing key with no default returns
+`null` rather than throwing. `APP_DEBUG=true` turns on error display; anything else suppresses it.
+
+`env()` is a one-line delegate to the `Env` that `public/index.php` built, and so is `logger()` to the `Log`. There
+is no `Env::getInstance()`: if you need an environment somewhere the Kernel has not booted — a script of your own —
+construct one and install it with `Env::use(Env::fromFile($path))`.
 
 ## Assets
 
