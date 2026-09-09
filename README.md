@@ -15,7 +15,7 @@ TetherPHP is a lightweight, flexible framework for building web applications in 
 
 - **ADR Architecture** — Clean separation of concerns using the Action-Domain-Responder pattern
 - **Routing** — Simple routing with support for dynamic parameters and route grouping
-- **Session & CSRF Protection** — Built-in session management and CSRF token validation
+- **Session & CSRF Protection** — Session management and CSRF validation, composed in as middleware so an API can leave them out
 - **Environment Configuration** — `.env` file support for managing application settings
 - **CLI Tools** — Code generation commands for scaffolding Actions, Domains, and Responders
 - **Tailwind CSS** — Pre-configured with Tailwind CSS for styling

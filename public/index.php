@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use TetherPHP\framework\Middleware\VerifyCsrfToken;
 use TetherPHP\framework\Modules\Env;
 use TetherPHP\framework\Modules\Log;
+use TetherPHP\framework\Sessions\Session;
 use TetherPHP\Kernel;
 use TetherPHP\Router;
 
@@ -21,4 +23,16 @@ $router = new Router();
 $env = Env::fromFile(__DIR__ . '/../.env');
 $log = new Log(__DIR__ . '/../storage/logs');
 
-new Kernel($router, $env, $log)->run()->send();
+/*
+ * Middleware runs around everything, outermost first, in the order written
+ * here. The framework starts no session and checks no CSRF token of its own
+ * accord: an application that wants both says so, and one that does not — a
+ * token-authenticated API — deletes this line and boots without a session.
+ */
+$session = new Session();
+
+$middleware = [
+    new VerifyCsrfToken($session, $log),
+];
+
+new Kernel($router, $env, $log, $middleware)->run()->send();

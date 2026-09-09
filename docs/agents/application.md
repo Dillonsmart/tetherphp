@@ -51,8 +51,34 @@ new Kernel($router, $env, $log)->run()->send();
 Which `.env` is read and where logs are written are answered by reading this file. Change either line — a different
 environment file per deployment, a log directory outside the project — and nothing in the framework needs to know.
 
-`Kernel` then defines `VERSION`/`VERSION_NAME`, installs error and exception handlers, starts a `Session` and ensures
-a CSRF token exists, all before routing.
+`Kernel` then installs error and exception handlers, and routes.
+
+### Middleware
+
+The fourth argument is the list of middleware that runs around everything, outermost first, in the order written:
+
+```php
+$session = new Session();
+
+$middleware = [
+    new VerifyCsrfToken($session, $log),
+];
+
+new Kernel($router, $env, $log, $middleware)->run()->send();
+```
+
+A middleware is one method — `__invoke(Request $request, \Closure $next): Response`. Call `$next($request)` to
+continue and you get the Response from the rest of the pipeline, to return, replace or add a header to. Return your
+own Response without calling `$next` and nothing after it runs, which is how a guard refuses a request. Throwing an
+`HttpException` works too, and is the same way an Action ends a request early.
+
+Middleware wraps routing, not just the Action, so it runs for a request that goes on to 404 — and sees that 404 on
+the way back out.
+
+**The framework starts no session and checks no CSRF token of its own accord.** The skeleton composes
+`VerifyCsrfToken` in because most applications serve forms; an application that does not — a token-authenticated API
+— deletes those lines and boots with no session at all. CSRF used to be validated inside `Request`, so it could not
+be turned off.
 
 ## ADR conventions
 

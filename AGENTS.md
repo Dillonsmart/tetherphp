@@ -84,6 +84,10 @@ storage/                        logs and application storage
 tether                          console entry point — a shim over vendor/bin/tether
 ```
 
+`public/index.php` also composes the middleware that runs around every request — the skeleton ships
+`VerifyCsrfToken`, and an API-only application deletes it and boots without a session. The framework starts no
+session and checks no token unless asked.
+
 An Action implements `ActionInterface` and **returns a `Response`**. `Kernel::run()` returns one too, and
 `public/index.php` calls `send()` on it — that is the only place anything is written to the client. It also
 constructs the `Env` and `Log` the Kernel is given: `new Kernel($router, $env, $log)`. The framework does not go
