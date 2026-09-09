@@ -31,6 +31,7 @@ cp .env.example .env          # Env::fromFile() throws without it
 composer install
 php -S 127.0.0.1:8000 -t public
 php tether help
+php tether test
 ```
 
 The console is first-class: `tether routes`, `tether explain <uri>`, `tether inspect <class>` and `tether context`
@@ -81,6 +82,7 @@ app/Views/        Views\        templates, partials, error pages
 public/                         web root: index.php, compiled assets
 routes/web.php                  route definitions
 storage/                        logs and application storage
+tests/            Tests\       Unit (a Domain alone) and Feature (through the Kernel)
 tether                          console entry point — a shim over vendor/bin/tether
 ```
 

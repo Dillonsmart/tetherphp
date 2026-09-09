@@ -41,5 +41,8 @@ jobs:
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8000/)" = "200"
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8000/does-not-exist)" = "404"
 
+      - name: Tests
+        run: php tether test
+
       - name: Console
         run: php tether help

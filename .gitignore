@@ -10,3 +10,5 @@ composer.lock
 composer.local.json
 !composer.local.json.example
 composer.local.lock
+.phpunit.cache
+.phpunit.result.cache

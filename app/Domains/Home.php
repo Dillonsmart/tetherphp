@@ -11,7 +11,7 @@ class Home extends Domain
     public function handle(): HomeResult
     {
         return new HomeResult(
-            name: env('APP_NAME'),
+            name: env('APP_NAME', 'TetherPHP'),
             description: 'An application built with TetherPHP.',
         );
     }

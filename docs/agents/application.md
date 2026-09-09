@@ -27,6 +27,7 @@ app/
 ├── Responders/   # Responders\   — turn a result into a response (view or JSON)
 └── Views/        # Views\        — templates, partials, error pages
 public/           # web root: index.php, compiled css/js
+tests/            # Tests\ — Unit/ and Feature/
 resources/css/    # Tailwind source
 routes/web.php    # route definitions
 storage/          # logs and application storage
@@ -218,6 +219,29 @@ Things worth knowing before debugging a route:
 `Views\` maps to `app/Views/`. Error views live in `app/Views/errors/`; the framework ships fallbacks but the
 application's own copies take precedence. `$router->view()` uses dot notation (`pages.terms` →
 `app/Views/pages/terms.php`).
+
+## Tests
+
+```bash
+php tether test                 # or composer test, or vendor/bin/phpunit
+php tether test --filter=Home
+```
+
+Two suites, and the split is the ADR split:
+
+- **`tests/Unit`** — a Domain or a Result on its own. No Kernel, no routing, no request. A Domain knows nothing about
+  HTTP, so testing one needs none of it; that is what the separation buys.
+- **`tests/Feature`** — a request through the real Kernel with the real `routes/web.php`, asserting on the `Response`
+  it returns. `Tests\TestCase` gives you `get()`, `post()` and `send()`.
+
+The base `TestCase` builds its own `Env` and `Log` rather than reading the `.env` on disk, so a test states the
+settings it depends on and never writes into `storage/`. That is only possible because the Kernel is handed both.
+
+It composes **no middleware**, so writes are not CSRF-challenged by default. Add `VerifyCsrfToken` to the list in
+`Tests\TestCase::send()` to test against the protection the application actually boots with.
+
+A status assertion alone is not enough: the error view is served with a 200 whenever the status was never set, so
+assert on the body too. `HomeTest` does.
 
 ## Environment
 
