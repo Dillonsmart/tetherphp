@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Responders;
+namespace Responders\Home;
 
-use Domains\Results\Home as HomeResult;
+use Domains\Home\Results\Page;
+use Responders\Responder;
 use TetherPHP\framework\Http\Response;
 
-class Home extends Responder
+class Index extends Responder
 {
     /**
      * The one place this page's view variables are named.
      */
-    public function __invoke(HomeResult $result): Response
+    public function __invoke(Page $result): Response
     {
         return $this->view('pages.home.index', [
             'appName' => $result->name,

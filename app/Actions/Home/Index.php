@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Actions;
+namespace Actions\Home;
 
-use Domains\Home as HomeDomain;
-use Responders\Home as HomeResponder;
+use Actions\Action;
+use Domains\Home\Index as IndexDomain;
+use Responders\Home\Index as IndexResponder;
 use TetherPHP\framework\Http\Response;
 use TetherPHP\framework\Interfaces\ActionInterface;
 use TetherPHP\framework\Requests\Request;
 
-class Home extends Action implements ActionInterface
+class Index extends Action implements ActionInterface
 {
     public function __construct(protected Request $request)
     {
-        $this->domain = new HomeDomain();
-        $this->responder = new HomeResponder($request);
+        $this->domain = new IndexDomain();
+        $this->responder = new IndexResponder($request);
     }
 
     public function __invoke(): Response

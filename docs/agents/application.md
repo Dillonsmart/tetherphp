@@ -23,7 +23,6 @@ app/
 ├── Actions/      # Actions\      — receive the Request, invoke a Domain, hand off to a Responder
 ├── Commands/     # Commands\     — console commands (created by make:command)
 ├── Domains/      # Domains\      — business logic, no HTTP knowledge
-│   └── Results/  # Domains\Results\ — the value objects Domains return
 ├── Responders/   # Responders\   — turn a result into a response (view or JSON)
 └── Views/        # Views\        — templates, partials, error pages
 public/           # web root: index.php, compiled css/js
@@ -34,6 +33,25 @@ routes/middleware.php  # what every request passes through
 storage/          # logs and application storage
 tether            # console entry point — a shim over vendor/bin/tether
 ```
+
+**Every feature is a directory.** A feature is named, and what it does within that feature is named separately:
+
+```
+app/Actions/Home/Index.php            Actions\Home\Index
+app/Domains/Home/Index.php            Domains\Home\Index
+app/Domains/Home/Results/Page.php     Domains\Home\Results\Page
+app/Responders/Home/Index.php         Responders\Home\Index
+app/Views/pages/home/index.php
+```
+
+`tether make:feature Blog` writes one operation into that shape and `tether make:resource Post` writes seven — the
+same layout either way, so **a feature grows by addition**: `tether make:action Blog Show` puts a second operation
+beside the first and moves nothing. A Result lives with the Domain that returns it, so one feature owns one
+directory under `Domains/`.
+
+Actions, Domains and Responders are named for the operation. **A Result is named for its shape**, and shared by
+every operation of the feature that answers the same way: `Collection` for many records, `Record` for one, `Written`
+for a write that answers with a redirect, `Page` for a page with neither behind it.
 
 ## Request lifecycle
 
@@ -106,19 +124,19 @@ where `extract()` turned its keys into template variables. So the array's keys *
 renaming `$tagline` in a template meant editing `Domains\Home`. That is the coupling the Responder exists to absorb,
 and while it lasted the Responder did nothing but forward its argument.
 
-A Domain now returns a `final readonly` value object under `Domains\Results\`, implementing
+A Domain now returns a `final readonly` value object under `Domains\<Feature>\Results\`, implementing
 `TetherPHP\framework\Interfaces\DomainResult` (an empty marker — it exists so `handle()` and `Action::respond()`
 have a type). The Responder translates it:
 
 ```php
-// app/Domains/Results/Home.php — named for the domain
-final readonly class Home implements DomainResult
+// app/Domains/Home/Results/Page.php — named for the domain
+final readonly class Page implements DomainResult
 {
     public function __construct(public string $name, public string $description) {}
 }
 
-// app/Responders/Home.php — the one place view variables are named
-public function __invoke(HomeResult $result): Response
+// app/Responders/Home/Index.php — the one place view variables are named
+public function __invoke(Page $result): Response
 {
     return $this->view('pages.home.index', [
         'appName' => $result->name,

@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Domains;
+namespace Domains\Home;
 
-use Domains\Results\Home as HomeResult;
+use Domains\Domain;
+use Domains\Home\Results\Page;
 
-class Home extends Domain
+class Index extends Domain
 {
-    public function handle(): HomeResult
+    public function handle(): Page
     {
-        return new HomeResult(
+        return new Page(
             name: env('APP_NAME', 'TetherPHP'),
             description: 'An application built with TetherPHP.',
         );

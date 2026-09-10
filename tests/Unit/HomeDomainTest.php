@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Domains\Home;
-use Domains\Results\Home as HomeResult;
+use Domains\Home\Index as HomeDomain;
+use Domains\Home\Results\Page as HomeResult;
 use PHPUnit\Framework\TestCase;
 use TetherPHP\framework\Modules\Env;
 
@@ -24,12 +24,12 @@ class HomeDomainTest extends TestCase
 
     public function testItReturnsItsOwnResultType(): void
     {
-        $this->assertInstanceOf(HomeResult::class, new Home()->handle());
+        $this->assertInstanceOf(HomeResult::class, new HomeDomain()->handle());
     }
 
     public function testItNamesTheApplicationFromTheEnvironment(): void
     {
-        $this->assertSame('Test App', new Home()->handle()->name);
+        $this->assertSame('Test App', new HomeDomain()->handle()->name);
     }
 
     /**
@@ -40,6 +40,6 @@ class HomeDomainTest extends TestCase
     {
         Env::use(new Env([]));
 
-        $this->assertSame('TetherPHP', new Home()->handle()->name);
+        $this->assertSame('TetherPHP', new HomeDomain()->handle()->name);
     }
 }
