@@ -52,7 +52,10 @@ directory under `Domains/`.
 
 Actions, Domains and Responders are named for the operation. **A Result is named for its shape**, and shared by
 every operation of the feature that answers the same way: `Collection` for many records, `Record` for one, `Written`
-for a write that answers with a redirect, `Page` for a page with neither behind it.
+for a write that answers with a redirect, `Invalid` for a write that was refused — what was sent and what was wrong
+with it — and `Page` for a page with neither behind it. `Store` and `Update` return `Written|Invalid`, and the
+Responder picks a 303 or the form again as a 422 off the type. The rules live in `Domains\<Feature>\Attributes`,
+one class per feature; there is no validation layer.
 
 ## Request lifecycle
 
@@ -302,8 +305,9 @@ Things worth knowing before debugging a route:
 
 ## Views
 
-`Views\` maps to `app/Views/`. Error views live in `app/Views/errors/`; the framework ships fallbacks but the
-application's own copies take precedence. `$router->view()` uses dot notation (`pages.terms` →
+`Views\` maps to `app/Views/`. Every generated view includes `partials/header.php` and `partials/footer.php` and
+sets `$pageTitle`, so it is a whole page; keep both partials, because the generators assume them. Error views live
+in `app/Views/errors/`; the framework ships fallbacks but the application's own copies take precedence. `$router->view()` uses dot notation (`pages.terms` →
 `app/Views/pages/terms.php`).
 
 **A view opens with a `@var` docblock naming what its Responder passes it.** The variables arrive by `extract()`,
