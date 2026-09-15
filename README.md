@@ -30,7 +30,7 @@ layer and no container — those can be added as packages. What ships is routing
 the console.
 
 It is built in public. The [dev log](https://tetherphp.com/devlog) records what broke and why, and development is
-posted on [X](https://x.com/DillonDevStuff).
+posted on X at [@DillonDevStuff](https://x.com/DillonDevStuff).
 
 ## Features
 
