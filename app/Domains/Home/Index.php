@@ -15,7 +15,7 @@ class Index extends Domain
      * this class depends on nothing that was not handed to it and a unit test
      * builds one with `new Env([...])` and no global in sight.
      */
-    public function __construct(private Env $env)
+    public function __construct(private readonly Env $env)
     {
     }
 

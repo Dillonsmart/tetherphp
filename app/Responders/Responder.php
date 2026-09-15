@@ -37,7 +37,9 @@ class Responder implements ResponderInterface
      * been checked — view data containing a 'file' key would then include an
      * arbitrary path. EXTR_SKIP additionally refuses to overwrite what is there.
      *
-     * @param array<string, mixed> $data
+     * @param string $__file
+     * @param array $__data
+     * @return string
      */
     private function renderInIsolation(string $__file, array $__data): string
     {
