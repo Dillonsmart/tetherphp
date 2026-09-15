@@ -3,6 +3,8 @@
 .env
 storage/private/*
 storage/logs/*
+!storage/private/.gitkeep
+!storage/logs/.gitkeep
 TODO.md
 vendor
 node_modules
