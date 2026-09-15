@@ -1,3 +1,11 @@
+<?php
+/**
+ * Set by the page that includes this partial, or left unset for the defaults.
+ *
+ * @var string|null $pageTitle
+ * @var string|null $metaDescription
+ */
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

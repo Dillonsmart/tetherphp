@@ -1,4 +1,10 @@
 <?php
+/**
+ * What Responders\Home\Index hands this view.
+ *
+ * @var string $appName
+ * @var string $tagline
+ */
 $pageTitle = $appName;
 include views_dir() . '/partials/header.php';
 ?>

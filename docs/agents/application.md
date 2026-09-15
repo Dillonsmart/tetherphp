@@ -306,6 +306,23 @@ Things worth knowing before debugging a route:
 application's own copies take precedence. `$router->view()` uses dot notation (`pages.terms` →
 `app/Views/pages/terms.php`).
 
+**A view opens with a `@var` docblock naming what its Responder passes it.** The variables arrive by `extract()`,
+so nothing in the file declares them, and without the docblock an IDE marks every one as undefined. It is the view's
+side of the contract the Responder's array is the other side of, and the generators write both. A partial declares
+what the including page may set, as `string|null` where the partial uses `??`:
+
+```php
+<?php
+/**
+ * What Responders\Home\Index hands this view.
+ *
+ * @var string $appName
+ * @var string $tagline
+ */
+```
+
+It is a promise, not a check: a Responder that stops passing `$tagline` still fails when the page renders.
+
 ## Tests
 
 ```bash
