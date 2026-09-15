@@ -45,8 +45,10 @@ abstract class TestCase extends PHPUnitTestCase
     protected function tearDown(): void
     {
         // the Kernel installs error handlers; leaving them on would leak one
-        // pair per test into the rest of the suite
-        foreach ($this->kernels as $kernel) {
+        // pair per test into the rest of the suite. Last in, first out: a
+        // Kernel only takes its own handler off when it is the one on top,
+        // so a test that sent two requests must unwind them in reverse
+        foreach (array_reverse($this->kernels) as $kernel) {
             $kernel->restoreErrorHandlers();
         }
 
