@@ -5,86 +5,108 @@
 <a href="https://packagist.org/packages/dillonsmart/tetherphp"><img src="https://img.shields.io/packagist/l/dillonsmart/tetherphp" alt="License"></a>
 </p>
 
-## About TetherPHP
+## Why
 
-TetherPHP is a small PHP framework built on the Action-Domain-Responder pattern. Its goal is that a request can be
-followed from route to response by reading the code — one Action per route, a Domain that knows no HTTP, and a
-Responder that decides what a view is given.
+Most of the time spent on an application is spent reading it, and more and more often the reader is not the
+person who wrote it. It is a colleague picking up the code, or an AI agent working on it.
 
-It is opinionated about structure and deliberately narrow in scope: there is no ORM, no query builder, no validation
-layer and no container. Those compose in as packages. What ships is routing, requests, responses, a middleware seam
-and the console.
+Frameworks tend to make that harder than it needs to be. Things get resolved by conventions nobody wrote down,
+dependencies get pulled from a container, and a request passes through layers of indirection before it reaches your
+code. If you know the framework's folklore, none of that is a problem. If you don't, every step is a "how did that
+happen?"
 
-It is built in public — the [dev log](https://tetherphp.com/devlog) records what broke and why, and development is
+TetherPHP exists so that a request can be followed from route to response just by reading the code. If something
+matters, it is visible. A file's location follows from its name. A class is handed what it depends on. And the
+console can show you what the application does, so nobody has to guess. What makes the code obvious to a person
+makes it obvious to an agent too.
+
+## What it is
+
+A small PHP framework built on the Action-Domain-Responder pattern. Each route has one Action, which calls a Domain
+that knows nothing about HTTP, and hands the result to a Responder that decides what the view gets.
+
+It is opinionated about structure and deliberately narrow in scope. There is no ORM, no query builder, no validation
+layer and no container — those can be added as packages. What ships is routing, requests, responses, middleware and
+the console.
+
+It is built in public. The [dev log](https://tetherphp.com/devlog) records what broke and why, and development is
 posted on [X](https://x.com/DillonDevStuff).
 
 ## Features
 
-- **ADR architecture** — one Action per route, and a pipeline you can trace by reading it
-- **Routing** — five HTTP verbs, dynamic segments, route groups. Captured parameters arrive on the request exactly as
-  they were sent, so slugs and UUIDs survive
-- **Requests** — three sources of input, each read where it came from: `params` from the path, `query` from the query
-  string, `payload` from the body, parsed for every verb
+- **ADR architecture** — one Action per route, and a request path you can trace by reading it
+- **Routing** — `get`, `post`, `put`, `patch` and `delete`, dynamic segments and route groups. Captured parameters
+  reach your Action exactly as they were sent, so slugs and UUIDs survive
+- **Requests** — path parameters, the query string and the request body are each available where you would expect:
+  `$request->params`, `$request->query` and `$request->payload`. The body is parsed for every verb, not just POST
 - **CRUD generation** — `make:resource` writes a whole resource: seven Actions, Domains and Responders, the Results
   they share, and the views
-- **Middleware** — the seam everything composes onto. CSRF protection and method overriding ship with the framework
-  and are opted into, so an API can leave them out and boot with no session at all
-- **Introspection** — `routes`, `explain`, `inspect` and `context` report what an application actually does, the last
-  as JSON for tooling and agents
-- **Environment configuration** — `.env`, handed to the Kernel rather than found by it
-- **Tailwind CSS** — pre-configured for styling
-- **Logging** — to the `storage/` directory
+- **Middleware** — CSRF protection and `_method` overriding ship with the framework, but you opt into them in
+  `routes/middleware.php`. An API can leave them out and boot with no session at all
+- **Introspection** — `routes`, `explain`, `inspect` and `context` report what the application actually does. The
+  last one prints JSON, for tooling and agents
+- **Environment** — a `.env` file, handed to the Kernel by `public/index.php` rather than found by the framework
+- **Tailwind CSS** — pre-configured
+- **Logging** — to `storage/logs/`
 
 ## Requirements
 
 - PHP 8.5 or higher
 - Composer
 
-## Installation
+## Getting started
 
-Install TetherPHP using Composer:
+Create a project with Composer, then copy the example environment file:
 
 ```bash
 composer create-project dillonsmart/tetherphp ./
-```
-
-Copy the `.env.example` file to `.env` and configure your application settings:
-
-```bash
 cp .env.example .env
 ```
 
-## Building Assets
+Run it on PHP's built-in server, or in Docker:
 
-TetherPHP uses Tailwind CSS for styling. Install dependencies and build the stylesheet:
+```bash
+php tether serve                # http://127.0.0.1:8000
+docker compose up --build       # http://localhost:8000
+```
+
+`php tether test` runs the test suite, and `php tether help` lists every command.
+
+## Building assets
+
+Styling is Tailwind CSS. Install the dependencies and build the stylesheet:
 
 ```bash
 npm install && npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --watch
 ```
 
-## Project Structure
+## Project structure
 
 ```
 ├── app/
 │   ├── Actions/Home/Index.php          # one class per route
 │   ├── Commands/                       # your console commands (make:command)
 │   ├── Domains/Home/Index.php          # business logic, no HTTP
-│   │   └── Home/Results/Page.php       # the value object the Domain returns
+│   ├── Domains/Home/Results/Page.php   # the value object the Domain returns
 │   ├── Responders/Home/Index.php       # names the view's variables
 │   └── Views/pages/home/index.php
 ├── public/                             # web root (index.php, compiled assets)
 ├── resources/                          # source assets (CSS)
 ├── routes/web.php                      # where a request goes
 ├── routes/middleware.php               # what it passes through
-└── storage/                            # logs and application storage
+├── storage/                            # logs and application storage
+├── tests/                              # Unit (a Domain alone) and Feature (through the Kernel)
+└── tether                              # the console
 ```
 
 **Every feature is a directory.** `Actions\Home\Index` lives at `app/Actions/Home/Index.php`, with its Domain,
-Result and Responder in the matching places. A second route is a second class beside the first — `tether make:action
-Home Show` — never a second method on the same one.
+Result and Responder in the matching places. A second route is a second class beside the first — `php tether
+make:action Home Show` — never a second method on the same one.
+
+The console generates that structure for you, and can report on it:
 
 ```bash
-php tether make:feature Blog                   # one page, whole triple
+php tether make:feature Blog                   # one page: Action, Domain, Result, Responder and view
 php tether make:resource Post --uri=/posts     # a full CRUD resource
 php tether routes                              # what is registered, and what wraps it
 php tether explain /posts/12                   # resolve one URL the way a request would
@@ -94,10 +116,10 @@ The framework itself is not part of this repository. It is installed as the
 [`dillonsmart/tetherphp-core`](https://github.com/Dillonsmart/tetherphp-core) Composer package and lives in
 `vendor/dillonsmart/tetherphp-core`.
 
-## Usage
+## Documentation
 
 The [documentation](https://tetherphp.com/docs) covers routing, requests, responders, middleware, CRUD and the
-console. `php tether help` lists every command, and `php tether help <command>` explains one.
+console. `php tether help <command>` explains any one command.
 
 ## Working on the framework itself
 
@@ -128,5 +150,5 @@ alias composer-local='COMPOSER=composer.local.json composer'
 To go back to the published package, remove the overlay and reinstall:
 
 ```bash
-rm -rf vendor composer.local.lock && composer install
+rm -rf vendor composer.local.json composer.local.lock && composer install
 ```
