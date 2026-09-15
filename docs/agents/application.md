@@ -57,6 +57,15 @@ with it — and `Page` for a page with neither behind it. `Store` and `Update` r
 Responder picks a 303 or the form again as a 422 off the type. The rules live in `Domains\<Feature>\Attributes`,
 one class per feature; there is no validation layer.
 
+**At the root of a feature's Domain namespace, a verb is an operation and a noun is a collaborator.**
+`Domains\Note\Store` is an operation: it has an Action and a Responder at the same path, a route points at the
+Action, and `tether inspect` finds all three from any one of them. `Domains\Note\Notes` — every query in one
+place — and `Domains\Note\Attributes` — the rules — are collaborators: shared by the operations, handed to them by
+the Action, routed to by nothing. Both kinds sit at the root together, because the operations *are* the domain and
+their path is what the tooling predicts from a route. A subdirectory is for a kind of thing that comes in numbers,
+which is why `Results/` is one; if a feature grows enough collaborators to want the same, give *them* the directory,
+never the operations.
+
 ## Request lifecycle
 
 `public/index.php` loads the autoloader, builds the `Services` the application runs with, builds a `Router` and
