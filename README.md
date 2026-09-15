@@ -32,6 +32,76 @@ the console.
 It is built in public. The [dev log](https://tetherphp.com/devlog) records what broke and why, and development is
 posted on X at [@DillonDevStuff](https://x.com/DillonDevStuff).
 
+## What it looks like
+
+This is the home page of a fresh install, end to end. A route names an Action:
+
+```php
+// routes/web.php
+$router->get('/', Actions\Home\Index::class);
+```
+
+The Action is constructed with the request and the application's services, builds its Domain and Responder, and
+connects them. It coordinates; it holds no logic and builds no markup:
+
+```php
+// app/Actions/Home/Index.php
+class Index extends Action implements ActionInterface
+{
+    public function __construct(protected Request $request, Services $services)
+    {
+        $this->domain = new IndexDomain($services->env);
+        $this->responder = new IndexResponder($request);
+    }
+
+    public function __invoke(): Response
+    {
+        return $this->respond($this->domain->handle());
+    }
+}
+```
+
+The Domain does the work. It knows nothing about HTTP, takes what it needs through its constructor, and returns a
+value object rather than an array:
+
+```php
+// app/Domains/Home/Index.php
+class Index extends Domain
+{
+    public function __construct(private readonly Env $env)
+    {
+    }
+
+    public function handle(): Page
+    {
+        return new Page(
+            name: $this->env->get('APP_NAME', 'TetherPHP'),
+            description: 'An application built with TetherPHP.',
+        );
+    }
+}
+```
+
+The Responder is the only place the view's variables are named. Rename `$tagline` in the template and the Domain
+does not change:
+
+```php
+// app/Responders/Home/Index.php
+class Index extends Responder
+{
+    public function __invoke(Page $result): Response
+    {
+        return $this->view('pages.home.index', [
+            'appName' => $result->name,
+            'tagline' => $result->description,
+        ]);
+    }
+}
+```
+
+Nothing above is resolved by convention, discovered by scanning, or pulled from a container. Every arrow in
+`Request → Route → Action → Domain → Responder → Response` is a line you can point at.
+
 ## Features
 
 - **ADR architecture** — one Action per route, and a request path you can trace by reading it
