@@ -11,8 +11,8 @@ from it. Keep it a starting point, not a showcase.
 
 ## Design constraints
 
-TetherPHP is built on six core principles, summarised in `AGENTS.md` and carried in full by the
-**tetherphp-principles** skill in the `tetherphp-core` repository. The ones that shape this repository most:
+TetherPHP is built on six core principles, summarised in `AGENTS.md` and carried in full by
+`docs/agents/principles.md` in the `tetherphp-core` repository. The ones that shape this repository most:
 **Explicit Over Magic** — `Request → Route → Action → Domain → Responder → Response` must stay traceable by reading —
 and **One Obvious Way**, which is why the skeleton ships one convention rather than demonstrating several.
 
@@ -56,20 +56,24 @@ for a write that answers with a redirect, `Page` for a page with neither behind 
 ## Request lifecycle
 
 `public/index.php` loads the autoloader, builds a `Router`, applies `routes/web.php` to it, constructs the `Env` and
-the `Log` the application runs with, and calls `send()` on the `Response` that `Kernel::run()` returns. So **an Action
-must return a `Response`** — `send()` is the only place anything is written to the client.
+the `Log` the application runs with, loads the middleware list from `routes/middleware.php`, and calls `send()` on the
+`Response` that `Kernel::run()` returns. So **an Action must return a `Response`** — `send()` is the only place
+anything is written to the client.
 
-The environment and the log are **handed to the Kernel, not found by it**:
+The environment, the log and the middleware are **handed to the Kernel, not found by it**:
 
 ```php
 $env = Env::fromFile(__DIR__ . '/../.env');
 $log = new Log(__DIR__ . '/../storage/logs');
 
-new Kernel($router, $env, $log)->run()->send();
+$middleware = (require __DIR__ . '/../routes/middleware.php')($env, $log);
+
+new Kernel($router, $env, $log, $middleware)->run()->send();
 ```
 
-Which `.env` is read and where logs are written are answered by reading this file. Change either line — a different
-environment file per deployment, a log directory outside the project — and nothing in the framework needs to know.
+Which `.env` is read, where logs are written and what wraps a request are answered by reading this file. Change any
+of those lines — a different environment file per deployment, a log directory outside the project — and nothing in
+the framework needs to know.
 
 `Kernel` then installs error and exception handlers, and routes.
 
@@ -80,6 +84,7 @@ environment file per deployment, a log directory outside the project — and not
 ```php
 return function (Env $env, Log $log): array {
     return [
+        new OverridesMethod(),
         new VerifyCsrfToken(new Session(), $log),
     ];
 };
@@ -96,10 +101,14 @@ own Response without calling `$next` and nothing after it runs, which is how a g
 Middleware wraps routing, not just the Action, so it runs for a request that goes on to 404 — and sees that 404 on
 the way back out.
 
-**The framework starts no session and checks no CSRF token of its own accord.** The skeleton composes
-`VerifyCsrfToken` in because most applications serve forms; an application that does not — a token-authenticated API
-— deletes the line and boots with no session at all. CSRF used to be validated inside `Request`, so it could not be
-turned off.
+**The framework starts no session, checks no CSRF token and honours no `_method` field of its own accord.** The
+skeleton composes `OverridesMethod` and `VerifyCsrfToken` in because most applications serve forms; an application
+that does not — a token-authenticated API — deletes both lines and boots with no session at all. CSRF used to be
+validated inside `Request`, so it could not be turned off.
+
+`OverridesMethod` goes first so that `VerifyCsrfToken` logs the verb the form asked for rather than the POST it
+arrived as. A browser form can only send GET or POST, so without it the router's `put()`, `patch()` and `delete()`
+routes are unreachable from a page.
 
 **Building a middleware must have no side effects.** `php tether routes`, `explain` and `context` build this list to
 report what runs around a request, so a constructor that opens a connection or starts a session does it from a
@@ -156,12 +165,15 @@ Two rules follow, and both are the point of the change:
 Generate the trio rather than hand-rolling it:
 
 ```bash
-php tether make:feature <name>      # Action, Domain, Result, Responder and view
-php tether make:action <name>
-php tether make:domain <name>       # writes the Result too — the Domain's return type names it
-php tether make:responder <name>    # writes the view too — the Responder renders it
+php tether make:feature <name>                  # one operation: Action, Domain, Result, Responder and view
+php tether make:resource <name> [--uri=/posts]  # seven operations, the Results they share, and the views
+php tether make:action <feature> <operation>
+php tether make:domain <feature> <operation>    # writes the Result too — the Domain's return type names it
+php tether make:responder <feature> <operation> # writes the view too — the Responder renders it
 php tether make:command <name>
 ```
+
+`<operation>` defaults to `Index`, so `make:action Blog` and `make:action Blog Index` are the same call.
 
 Generating a piece at a time is the same writer as generating the whole feature, so the two cannot drift apart.
 `make:action` on its own says which of the Domain and Responder it names do not exist yet, because an Action that
@@ -178,8 +190,8 @@ php tether serve                    # PHP's built-in server, pointed at public/
 php tether test                     # forwards to the application's own PHPUnit
 ```
 
-`explain` resolves the URI the way a request would — lowercased, query string dropped — and names the parameters a
-dynamic route would capture, so it answers "why does this 404?" without reading the matcher.
+`explain` resolves the URI the way a request would — compared case-insensitively, query string dropped — and names
+the parameters a dynamic route would capture, so it answers "why does this 404?" without reading the matcher.
 
 `routes` and `context` both mark a route whose Action is missing or does not implement `ActionInterface`. That is
 otherwise a 500 nobody sees until someone requests the page.
@@ -233,8 +245,10 @@ return function (Router $router) {
 
 Things worth knowing before debugging a route:
 
-- Request URIs are **lowercased** by `Request::$uri`'s property hook, so routes are case-insensitive and captured
-  dynamic parameters arrive lowercased.
+- Routes are **case-insensitive, but parameters are not normalised**. The Router compares segments with
+  `strcasecmp` and captures `{param}` segments verbatim, so `/posts/My-Slug` matches `/posts/{slug}` and
+  `params['slug']` is `My-Slug`. `Request::$uri` is never rewritten — it used to be lowercased by a property hook,
+  which made routing a slug or a UUID impossible.
 - A static route wins over a dynamic route of the same shape.
 - A dynamic route only matches a URI with the **same number of `/`-separated segments**.
 - `group()` requires a non-empty prefix and `{}` with an empty name throws — both are `InvalidArgumentException`.
