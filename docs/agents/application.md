@@ -24,6 +24,7 @@ app/
 ├── Commands/     # Commands\     — console commands (created by make:command)
 ├── Domains/      # Domains\      — business logic, no HTTP knowledge
 ├── Responders/   # Responders\   — turn a result into a response (view or JSON)
+├── Services.php  # App\Services  — what the application is made of; built in public/index.php
 └── Views/        # Views\        — templates, partials, error pages
 public/           # web root: index.php, compiled css/js
 tests/            # Tests\ — Unit/ and Feature/
@@ -55,25 +56,69 @@ for a write that answers with a redirect, `Page` for a page with neither behind 
 
 ## Request lifecycle
 
-`public/index.php` loads the autoloader, builds a `Router`, applies `routes/web.php` to it, constructs the `Env` and
-the `Log` the application runs with, loads the middleware list from `routes/middleware.php`, and calls `send()` on the
+`public/index.php` loads the autoloader, builds the `Services` the application runs with, builds a `Router` and
+applies `routes/web.php` to it, loads the middleware list from `routes/middleware.php`, and calls `send()` on the
 `Response` that `Kernel::run()` returns. So **an Action must return a `Response`** — `send()` is the only place
 anything is written to the client.
 
-The environment, the log and the middleware are **handed to the Kernel, not found by it**:
+What the application is made of is **handed to the Kernel, not found by it**:
 
 ```php
-$env = Env::fromFile(__DIR__ . '/../.env');
-$log = new Log(__DIR__ . '/../storage/logs');
+$services = new Services(
+    env: Env::fromFile(__DIR__ . '/../.env'),
+    log: new Log(__DIR__ . '/../storage/logs'),
+);
 
-$middleware = (require __DIR__ . '/../routes/middleware.php')($env, $log);
+$middleware = (require __DIR__ . '/../routes/middleware.php')($services->env, $services->log);
 
-new Kernel($router, $env, $log, $middleware)->run()->send();
+new Kernel($router, $services, $middleware)->run()->send();
 ```
 
-Which `.env` is read, where logs are written and what wraps a request are answered by reading this file. Change any
-of those lines — a different environment file per deployment, a log directory outside the project — and nothing in
-the framework needs to know.
+Which `.env` is read, where logs are written, what else the application has and what wraps a request are all
+answered by reading this file. Change any of those lines — a different environment file per deployment, a log
+directory outside the project, a second database — and nothing in the framework needs to know.
+
+### How a Domain gets a dependency
+
+`App\Services` is the application's own class — `final readonly`, one public property per thing the application
+has. `Env` and `Log` are the two that `ServicesInterface` requires, because the Kernel runs on them: it reads
+`APP_DEBUG`, logs what goes wrong, and installs both for the `env()` and `logger()` helpers. Everything else on the
+class is yours. The Kernel constructs every Action with `($request, $services)`, and the Action hands its Domain the
+pieces the Domain asks for:
+
+```php
+// app/Actions/Home/Index.php
+public function __construct(protected Request $request, Services $services)
+{
+    $this->domain = new IndexDomain($services->env);
+    $this->responder = new IndexResponder($request);
+}
+
+// app/Domains/Home/Index.php
+public function __construct(private Env $env)
+{
+}
+```
+
+Three rules:
+
+- **A Domain takes what it needs, never `Services`.** Its constructor is then the complete list of what it depends
+  on, and `tests/Unit/HomeDomainTest.php` builds one with `new Env([...])` and no global. A Domain that took the
+  whole object would depend on everything and say nothing. The same goes for `env()` and `logger()`: they exist for
+  views, which nothing constructs; a Domain is handed its `Env`.
+- **Add a dependency in two places.** A property on `Services` — `public PDO $db` — and its construction in
+  `public/index.php` — `db: new PDO($env->get('DB_DSN') ?? '')`. Nothing else changes, and nothing is looked up by
+  name. A class of your own that `Services` holds lives under `app/Services/` in the `App\Services` namespace.
+- **Build it, don't make it lazy.** Everything in `Services` is constructed on every request, in the order written.
+  Something expensive that most requests never touch should connect on first use — the way `Session` does —
+  rather than the wiring growing closures.
+
+`php tether inspect App\Services` lists what it provides, `inspect` on an Action shows it takes one, and
+`php tether context` carries the class and its properties under `services`. None of them construct it.
+
+What this does not cover: `routes/middleware.php` still takes `(Env, Log)`, because the console builds that list to
+report it and cannot build the application's services. A middleware that needs a connection has no explicit route
+to one yet.
 
 `Kernel` then installs error and exception handlers, and routes.
 
@@ -119,11 +164,11 @@ reason, so holding one costs nothing.
 
 ## ADR conventions
 
-- An **Action** implements `ActionInterface`, takes the `Request` in its constructor, and returns a `Response`. It
-  coordinates; it should not contain business logic or build markup. Dynamic route parameters are on the request as
-  `$this->request->params['slug']` — never re-parse the URI.
-- A **Domain** holds the logic and knows nothing about HTTP. `handle()` returns a **`DomainResult`** — never an
-  array. See below.
+- An **Action** implements `ActionInterface`, takes the `Request` and the `Services` in its constructor, and returns
+  a `Response`. It coordinates; it should not contain business logic or build markup. Dynamic route parameters are
+  on the request as `$this->request->params['slug']` — never re-parse the URI.
+- A **Domain** holds the logic and knows nothing about HTTP. What it needs — an `Env`, a `PDO` — arrives through its
+  constructor from the Action. `handle()` returns a **`DomainResult`** — never an array. See below.
 - A **Responder** renders — `view()` or `json()`, both returning a `Response`. Pass a status as `view($name, $data, 404)` rather than calling `http_response_code()`.
 
 ### Domains return a result, not an array
@@ -275,8 +320,10 @@ Two suites, and the split is the ADR split:
 - **`tests/Feature`** — a request through the real Kernel with the real `routes/web.php`, asserting on the `Response`
   it returns. `Tests\TestCase` gives you `get()`, `post()` and `send()`.
 
-The base `TestCase` builds its own `Env` and `Log` rather than reading the `.env` on disk, so a test states the
-settings it depends on and never writes into `storage/`. That is only possible because the Kernel is handed both.
+The base `TestCase` builds its own `Services` — with an `Env` and a `Log` of its own inside — rather than reading
+the `.env` on disk, so a test states the settings it depends on and never writes into `storage/`. That is only
+possible because the Kernel is handed them. Override `services()` to hand a feature a fake in place of a real
+connection.
 
 It composes **no middleware** by default, so writes are not CSRF-challenged and a feature test stays a single call —
 a test that had to mint a token before it could POST would be testing the middleware rather than the feature.
@@ -301,12 +348,14 @@ fresh checkout:
 cp .env.example .env
 ```
 
-Read values with `env('KEY')`, or `env('KEY', 'fallback')` for a default. A missing key with no default returns
-`null` rather than throwing. `APP_DEBUG=true` turns on error display; anything else suppresses it.
+In a view, read values with `env('KEY')`, or `env('KEY', 'fallback')` for a default. A missing key with no default
+returns `null` rather than throwing. `APP_DEBUG=true` turns on error display; anything else suppresses it.
 
-`env()` is a one-line delegate to the `Env` that `public/index.php` built, and so is `logger()` to the `Log`. There
-is no `Env::getInstance()`: if you need an environment somewhere the Kernel has not booted — a script of your own —
-construct one and install it with `Env::use(Env::fromFile($path))`.
+`env()` is a one-line delegate to the `Env` that `public/index.php` built, and so is `logger()` to the `Log`. They
+are for templates, which nothing constructs. A Domain is handed its `Env` by the Action — `$services->env` — and
+reads it with `$this->env->get('KEY', 'fallback')`, so a unit test can give it one. There is no `Env::getInstance()`:
+if you need an environment somewhere the Kernel has not booted — a script of your own — construct one and install
+it with `Env::use(Env::fromFile($path))`.
 
 ## Assets
 
@@ -332,6 +381,7 @@ php -S 127.0.0.1:8000 -t public
 | Change                                                     | Repository        |
 | ----------------------------------------------------------- | ----------------- |
 | Actions, Domains, Responders, views, routes, assets, `.env`  | here              |
+| `App\Services` and what `public/index.php` builds into it    | here              |
 | Routing, request, session, CSRF, logging, console, stubs     | `tetherphp-core`  |
 | The console binary itself (`bin/tether`)                     | `tetherphp-core`  |
 

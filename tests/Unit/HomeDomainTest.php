@@ -12,34 +12,34 @@ use TetherPHP\framework\Modules\Env;
 /**
  * A Domain knows nothing about HTTP, so testing one needs no Kernel, no
  * routing and no request — which is the whole point of keeping them separate.
+ *
+ * It needs no global either. The Domain takes its Env through the constructor,
+ * so each test hands it exactly the environment it is about; this used to
+ * call Env::use() in setUp() because the Domain read env() from the air.
  */
 class HomeDomainTest extends TestCase
 {
-    protected function setUp(): void
+    private function domain(array $vars): HomeDomain
     {
-        // env() delegates to whatever was installed at boot; a unit test
-        // installs its own rather than reading the .env on disk
-        Env::use(new Env(['APP_NAME' => 'Test App']));
+        return new HomeDomain(new Env($vars));
     }
 
     public function testItReturnsItsOwnResultType(): void
     {
-        $this->assertInstanceOf(HomeResult::class, new HomeDomain()->handle());
+        $this->assertInstanceOf(HomeResult::class, $this->domain(['APP_NAME' => 'Test App'])->handle());
     }
 
     public function testItNamesTheApplicationFromTheEnvironment(): void
     {
-        $this->assertSame('Test App', new HomeDomain()->handle()->name);
+        $this->assertSame('Test App', $this->domain(['APP_NAME' => 'Test App'])->handle()->name);
     }
 
     /**
      * A default keeps a missing APP_NAME from being a TypeError on a string
-     * property. env() returns null for a key that is not set.
+     * property. Env::get() returns null for a key that is not set.
      */
     public function testItFallsBackWhenTheApplicationIsUnnamed(): void
     {
-        Env::use(new Env([]));
-
-        $this->assertSame('TetherPHP', new HomeDomain()->handle()->name);
+        $this->assertSame('TetherPHP', $this->domain([])->handle()->name);
     }
 }

@@ -78,6 +78,7 @@ app/Commands/     Commands\     console commands (created by make:command)
 app/Domains/      Domains\      business logic, no HTTP knowledge
 app/Domains/<Feature>/Results/  the value objects that feature's Domains return
 app/Responders/   Responders\   turn a result into a response, naming its view variables
+app/Services.php  App\Services  what the application is made of — built in public/index.php, handed to every Action
 app/Views/        Views\        templates, partials, error pages
 public/                         web root: index.php, compiled assets
 routes/web.php                  route definitions
@@ -96,10 +97,18 @@ middleware alongside the route it resolves to.
 starts on first use rather than on construction for this reason.
 
 An Action implements `ActionInterface` and **returns a `Response`**. `Kernel::run()` returns one too, and
-`public/index.php` calls `send()` on it — that is the only place anything is written to the client. It also
-constructs the `Env` and `Log` the Kernel is given, and loads the middleware list:
-`new Kernel($router, $env, $log, $middleware)`. The framework does not go looking for any of them, so which `.env`,
-which log directory and which middleware are in play is answered by reading that one file.
+`public/index.php` calls `send()` on it — that is the only place anything is written to the client. It also builds
+the `Services` the Kernel is given and loads the middleware list: `new Kernel($router, $services, $middleware)`.
+The framework does not go looking for any of it, so which `.env`, which log directory, which middleware and which
+connections are in play is answered by reading that one file.
+
+**Dependencies reach a Domain through its constructor, from the Action.** `App\Services` (`app/Services.php`) is a
+`final readonly` class listing what the application is made of. `Env` and `Log` are the two properties
+`ServicesInterface` requires, because the Kernel runs on them; everything else is the application's own. The Kernel
+constructs every Action with `($request, $services)`, and the Action passes its Domain the pieces it needs:
+`new IndexDomain($services->env)`. A Domain never takes the whole object and never calls `env()`. To add a
+database, add `public PDO $db` to `Services` and `db: new PDO(...)` to `public/index.php`; there is no container and
+nothing is resolved by name. `php tether inspect App\Services` lists what it provides.
 
 Route parameters arrive on the request: `$this->request->params['slug']`. Do not re-parse the URI.
 
@@ -111,7 +120,8 @@ Route parameters arrive on the request: `$this->request->params['slug']`. Do not
 - A **static route wins** over a dynamic route of the same shape, and a dynamic route only matches a URI with the
   same number of `/`-separated segments.
 - The PSR-4 roots are declared in **both** `composer.json` and `composer.local.json.example`. A change to one must be
-  mirrored in the other, or classes resolve in one mode and not the other.
+  mirrored in the other, or classes resolve in one mode and not the other. `App\` → `app/` is one of them: it is
+  what makes `App\Services` autoload, and without it every Action fails to construct.
 - Without the `Commands\` mapping, `Console::registerCommands()` cannot autoload generated commands and they vanish
   from `php tether help` with no error at all.
 - **`tether` holds no console code.** The binary is `bin/tether` in `tetherphp-core`, which Composer proxies into
@@ -124,6 +134,7 @@ Route parameters arrive on the request: `$this->request->params['slug']`. Do not
 | Change                                                      | Repository        |
 | ------------------------------------------------------------ | ----------------- |
 | Actions, Domains, Responders, views, routes, assets, `.env`   | here              |
+| `App\Services` and what `public/index.php` builds into it     | here              |
 | Routing, request, session, CSRF, logging, console, stubs      | `tetherphp-core`  |
 | The console binary itself (`bin/tether`)                      | `tetherphp-core`  |
 

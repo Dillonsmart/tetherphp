@@ -46,6 +46,8 @@ posted on [X](https://x.com/DillonDevStuff).
 - **Introspection** — `routes`, `explain`, `inspect` and `context` report what the application actually does. The
   last one prints JSON, for tooling and agents
 - **Environment** — a `.env` file, handed to the Kernel by `public/index.php` rather than found by the framework
+- **Dependencies without a container** — `app/Services.php` lists what the application is made of, `public/index.php`
+  builds it, and every Action is handed it to pass its Domain what the Domain needs
 - **Tailwind CSS** — pre-configured
 - **Logging** — to `storage/logs/`
 
@@ -89,6 +91,7 @@ npm install && npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.cs
 │   ├── Domains/Home/Index.php          # business logic, no HTTP
 │   ├── Domains/Home/Results/Page.php   # the value object the Domain returns
 │   ├── Responders/Home/Index.php       # names the view's variables
+│   ├── Services.php                    # what the application is made of; built in public/index.php
 │   └── Views/pages/home/index.php
 ├── public/                             # web root (index.php, compiled assets)
 ├── resources/                          # source assets (CSS)

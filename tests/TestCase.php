@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use App\Services;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use TetherPHP\framework\Http\Response;
 use TetherPHP\framework\Interfaces\MiddlewareInterface;
@@ -15,9 +16,10 @@ use TetherPHP\Router;
 /**
  * A request sent through the real Kernel, with the real routes.
  *
- * The environment and the log are built here rather than read from disk, so a
- * test states the settings it depends on and never writes into storage/. That
- * is only possible because the Kernel is handed both instead of finding them.
+ * The services — and the environment and log inside them — are built here
+ * rather than read from disk, so a test states the settings it depends on and
+ * never writes into storage/. That is only possible because the Kernel is
+ * handed them instead of finding them.
  *
  * No middleware is composed in by default, so writes are not CSRF-challenged
  * and most tests stay a single call. Override middleware() to test against
@@ -66,7 +68,7 @@ abstract class TestCase extends PHPUnitTestCase
         $_SERVER['REQUEST_METHOD'] = $method;
         $_SERVER['REQUEST_URI'] = $uri;
 
-        $kernel = new Kernel($this->router, $this->env(), $this->log(), $this->middleware());
+        $kernel = new Kernel($this->router, $this->services(), $this->middleware());
 
         $this->kernels[] = $kernel;
 
@@ -101,5 +103,15 @@ abstract class TestCase extends PHPUnitTestCase
     protected function log(): Log
     {
         return new Log(sys_get_temp_dir() . '/tetherphp-test-logs');
+    }
+
+    /**
+     * What the Actions under test are handed — the same class public/index.php
+     * builds, so a feature test runs the real wiring. Override it to hand a
+     * feature a fake in place of a real connection.
+     */
+    protected function services(): Services
+    {
+        return new Services(env: $this->env(), log: $this->log());
     }
 }

@@ -18,6 +18,7 @@
     },
     "autoload": {
         "psr-4": {
+            "App\\": "app/",
             "Actions\\": "app/Actions/",
             "Commands\\": "app/Commands/",
             "Responders\\": "app/Responders/",
