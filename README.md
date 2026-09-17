@@ -191,8 +191,16 @@ The framework itself is not part of this repository. It is installed as the
 
 ## Documentation
 
-The [documentation](https://tetherphp.com/docs) covers routing, requests, responders, middleware, CRUD and the
-console. `php tether help <command>` explains any one command.
+The [documentation](https://tetherphp.com/docs) covers routing, requests, responders, middleware, services, CRUD and
+the console. `php tether help <command>` explains any one command.
+
+## A complete example
+
+This skeleton is a starting point, so its one feature does nothing. To see what a feature looks like with a database
+behind it, a form in front of it and input to refuse, read
+[**tetherphp-demo**](https://github.com/Dillonsmart/tetherphp-demo): a notes application built from this skeleton
+with `tether make:resource`, using SQLite through `Services`, with validation, a 422 that carries the form back, and
+feature tests through the real Kernel against an in-memory database. Its README says what to read in what order.
 
 ## Working on the framework itself
 
