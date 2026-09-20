@@ -8,6 +8,5 @@ services:
       - .:/var/www/html
       # keep the image's vendor rather than shadowing it with the host's
       - /var/www/html/vendor
-    environment:
-      APP_NAME: TetherPHP
-      APP_DEBUG: "true"
+    # Configuration is read from the .env file the mount brings in, not the
+    # environment — an `environment:` block here would be ignored.
