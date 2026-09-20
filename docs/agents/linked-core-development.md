@@ -76,7 +76,7 @@ Until then `php tether` reports the console as missing even though the core chec
 
 | File                          | Tracked | Purpose                                    |
 | ----------------------------- | ------- | ------------------------------------------ |
-| `composer.json`               | yes     | the real published dependency, currently `^0.11`. Constrain to a patch (`^0.3.1`, never `^0.3`) whenever a version has been published from a stale commit and must be skipped |
+| `composer.json`               | yes     | the real published dependency, currently `^0.13`. Constrain to a patch (`^0.3.1`, never `^0.3`) whenever a version has been published from a stale commit and must be skipped |
 | `composer.local.json.example` | yes     | the template for the linked setup          |
 | `composer.local.json`         | no      | your local overlay                         |
 | `composer.local.lock`         | no      | the overlay's lock                         |
