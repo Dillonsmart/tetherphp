@@ -194,6 +194,9 @@ reason, so holding one costs nothing.
 - A **Domain** holds the logic and knows nothing about HTTP. What it needs — an `Env`, a `PDO` — arrives through its
   constructor from the Action. `handle()` returns a **`DomainResult`** — never an array. See below.
 - A **Responder** renders — `view()` or `json()`, both returning a `Response`. Pass a status as `view($name, $data, 404)` rather than calling `http_response_code()`.
+  A write redirects with `Response::redirect()`. **Never redirect to a value that came off the request** — a
+  Responder that sends the browser to `$request->query['next']` is an open redirect. If a target must come from
+  the request, accept it only when it starts with a single `/` (`//other.example` is a URL and leaves the site).
 
 ### Domains return a result, not an array
 
@@ -314,6 +317,8 @@ return function (Router $router) {
 
 Things worth knowing before debugging a route:
 
+- Path segments are **percent-decoded once, one at a time, by the Router**: `/posts/caf%C3%A9` captures `café`.
+  Do not `rawurldecode()` a parameter in an Action; it would decode twice.
 - Routes are **case-insensitive, but parameters are not normalised**. The Router compares segments with
   `strcasecmp` and captures `{param}` segments verbatim, so `/posts/My-Slug` matches `/posts/{slug}` and
   `params['slug']` is `My-Slug`. `Request::$uri` is never rewritten — it used to be lowercased by a property hook,
