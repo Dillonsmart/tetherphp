@@ -88,9 +88,11 @@ tests/            Tests\       Unit (a Domain alone) and Feature (through the Ke
 tether                          console entry point — a shim over vendor/bin/tether
 ```
 
-`routes/middleware.php` lists what every request passes through — the skeleton ships `OverridesMethod` and
-`VerifyCsrfToken`, and an API-only application deletes both lines and boots without a session. The framework starts
-no session, checks no token and honours no `_method` field unless asked. `php tether explain <uri>` shows the
+`routes/middleware.php` lists what every request passes through — the skeleton ships `SecurityHeaders`,
+`OverridesMethod` and `VerifyCsrfToken`; an API-only application keeps the first and deletes the other two, and boots
+without a session. The framework sends no security headers, starts no session, checks no token and honours no
+`_method` field unless asked. `TRUST_FORWARDED_PROTO=true` in `.env` is for a deployment behind a TLS-terminating
+proxy, and nowhere else. `php tether explain <uri>` shows the
 middleware alongside the route it resolves to.
 
 **Building a middleware must have no side effects**, because the console builds the list to report it. `Session`

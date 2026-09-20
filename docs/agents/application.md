@@ -141,8 +141,9 @@ to one yet.
 ```php
 return function (Env $env, Log $log): array {
     return [
+        new SecurityHeaders(),
         new OverridesMethod(),
-        new VerifyCsrfToken(new Session(), $log),
+        new VerifyCsrfToken(new Session(trustForwardedProto: $env->get('TRUST_FORWARDED_PROTO') === 'true'), $log),
     ];
 };
 ```
@@ -158,10 +159,21 @@ own Response without calling `$next` and nothing after it runs, which is how a g
 Middleware wraps routing, not just the Action, so it runs for a request that goes on to 404 — and sees that 404 on
 the way back out.
 
-**The framework starts no session, checks no CSRF token and honours no `_method` field of its own accord.** The
-skeleton composes `OverridesMethod` and `VerifyCsrfToken` in because most applications serve forms; an application
-that does not — a token-authenticated API — deletes both lines and boots with no session at all. CSRF used to be
-validated inside `Request`, so it could not be turned off.
+**The framework sends no security headers, starts no session, checks no CSRF token and honours no `_method` field
+of its own accord.** The skeleton composes `SecurityHeaders`, `OverridesMethod` and `VerifyCsrfToken` in because
+most applications serve pages and forms; an application that does not — a token-authenticated API — keeps the
+headers and deletes the other two lines, and boots with no session at all. CSRF used to be validated inside
+`Request`, so it could not be turned off.
+
+`SecurityHeaders` is first so it is outermost: `nosniff`, `X-Frame-Options: DENY` and a referrer policy on every
+response, error pages included. It takes the list to send, so a Content-Security-Policy is
+`new SecurityHeaders([...SecurityHeaders::DEFAULTS, 'Content-Security-Policy' => "default-src 'self'"])`.
+
+**`TRUST_FORWARDED_PROTO=true` only behind a proxy that terminates TLS.** PHP then sees plain HTTP, so without it
+the session cookie goes out without `Secure`; with it the Session believes `X-Forwarded-Proto: https`. Any client
+can send that header, so it stays empty everywhere else. And **call `$session->regenerateId()` on login**: the
+framework has no login and never calls it, and a session ID that existed before the login must not carry the
+privilege after it. It drops the CSRF token too, so the next request is issued a fresh one.
 
 `OverridesMethod` goes first so that `VerifyCsrfToken` logs the verb the form asked for rather than the POST it
 arrived as. A browser form can only send GET or POST, so without it the router's `put()`, `patch()` and `delete()`
