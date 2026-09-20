@@ -4,6 +4,7 @@
 <a href="https://packagist.org/packages/dillonsmart/tetherphp"><img src="https://img.shields.io/packagist/v/dillonsmart/tetherphp" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/dillonsmart/tetherphp"><img src="https://img.shields.io/packagist/l/dillonsmart/tetherphp" alt="License"></a>
 </p>
+<p align="center"><em>Built with the help of <a href="https://claude.com/claude-code">Claude Code</a>, in public.</em></p>
 
 ## Why
 
@@ -29,7 +30,8 @@ It is opinionated about structure and deliberately narrow in scope. There is no 
 layer and no container — those can be added as packages. What ships is routing, requests, responses, middleware and
 the console.
 
-It is built in public. The [dev log](https://tetherphp.com/devlog) records what broke and why, and development is
+It is built in public, with Claude Code. An AI agent writes much of the code; the reasoning behind each change is
+in the commit messages, and the [dev log](https://tetherphp.com/devlog) records what broke and why. Development is
 posted on X at [@DillonDevStuff](https://x.com/DillonDevStuff).
 
 ## What it looks like
@@ -123,7 +125,8 @@ Nothing above is resolved by convention, discovered by scanning, or pulled from 
 
 ## Requirements
 
-- PHP 8.5 or higher
+- PHP 8.5 or higher — property hooks and `new` without parentheses are used throughout, so 8.4 fatals rather than
+  degrades
 - Composer
 
 ## Getting started

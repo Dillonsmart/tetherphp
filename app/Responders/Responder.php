@@ -47,8 +47,17 @@ class Responder implements ResponderInterface
             extract($__data, EXTR_SKIP);
             unset($__data);
 
+            // A view that throws must not leave its buffer open, or the half
+            // page it produced is flushed ahead of the 500 the Kernel sends.
             ob_start();
-            include $__file;
+
+            try {
+                include $__file;
+            } catch (\Throwable $e) {
+                ob_end_clean();
+
+                throw $e;
+            }
 
             return (string) ob_get_clean();
         };

@@ -318,7 +318,9 @@ return function (Router $router) {
 Things worth knowing before debugging a route:
 
 - Path segments are **percent-decoded once, one at a time, by the Router**: `/posts/caf%C3%A9` captures `café`.
-  Do not `rawurldecode()` a parameter in an Action; it would decode twice.
+  Do not `rawurldecode()` a parameter in an Action; it would decode twice. A parameter may contain a `/` if it
+  was sent as `%2F`; it never contains a NUL byte, and it is never empty — `/notes/` 404s rather than reaching
+  Show with an id of `''`.
 - Routes are **case-insensitive, but parameters are not normalised**. The Router compares segments with
   `strcasecmp` and captures `{param}` segments verbatim, so `/posts/My-Slug` matches `/posts/{slug}` and
   `params['slug']` is `My-Slug`. `Request::$uri` is never rewritten — it used to be lowercased by a property hook,
