@@ -189,6 +189,42 @@ The framework itself is not part of this repository. It is installed as the
 [`dillonsmart/tetherphp-core`](https://github.com/Dillonsmart/tetherphp-core) Composer package and lives in
 `vendor/dillonsmart/tetherphp-core`.
 
+## Naming things
+
+TetherPHP is opinionated about names, because a name is how you find a file and how the console finds it. There is
+one way, the generators write it, and the rules fit in a table. `Note` is the feature and `Store` is the operation
+throughout:
+
+| Thing | Rule | Example |
+| --- | --- | --- |
+| Feature | a singular noun in PascalCase; one directory of that name under `Actions/`, `Domains/` and `Responders/` | `Note` |
+| Operation | a verb in PascalCase; **one class per operation, with the same name in all three layers** | `Actions\Note\Store`, `Domains\Note\Store`, `Responders\Note\Store` |
+| CRUD operations | the seven verbs `make:resource` writes, and no others | `Index` `Create` `Store` `Show` `Edit` `Update` `Destroy` |
+| Result | named for its **shape**, never for the operation; `final readonly`, under `Results/`, shared by every operation that answers the same way | `Domains\Note\Results\Record` — used by `Show` and `Edit` alike |
+| The result shapes | `Collection` many, `Record` one, `Written` a change, `Invalid` a refusal, `Page` none of those | `handle(): Written\|Invalid` |
+| Collaborator | a **noun** at the root of the feature's Domain namespace: shared by the operations, routed to by nothing | `Domains\Note\Notes` (the queries), `Domains\Note\Attributes` (the rules) |
+| View | `app/Views/pages/<feature>/<operation>.php`, both lowercase; referred to in dot notation | `pages/note/create.php`, `$this->view('pages.note.create', …)` |
+| Partial | `app/Views/partials/<name>.php`, kebab-case | `partials/note-form.php` |
+| Error view | `app/Views/errors/<status>.php` | `errors/404.php` |
+| Route | kebab-case URI, plural for a resource, `{param}` for a segment; `make:resource --uri` sets it | `/notes`, `/notes/{id}`, `/notes/{id}/edit` |
+| Command | `app/Commands/<Name>Command.php`; invoked in kebab-case, or namespaced with a colon | `DbSchemaCommand` → `php tether db:schema` |
+| Services | one class, `App\Services` at `app/Services.php`; a class of your own that it holds goes under `app/Services/` | `App\Services\Mailer` |
+| Test | `tests/Unit/` for a Domain or Result on its own, `tests/Feature/` for a request through the Kernel; `<Subject>Test.php` | `tests/Unit/AttributesTest.php`, `tests/Feature/NotesTest.php` |
+| Env key | `UPPER_SNAKE_CASE` in `.env`, read with `$env->get('DB_DSN')` | `APP_NAME`, `DB_DSN` |
+
+Three of those carry the rest:
+
+- **Same name, three layers.** A route names an Action; the Action's name is the Domain's name is the Responder's
+  name. That one-to-one path is what lets `php tether inspect Note\Store` show you all three, and why a Domain's
+  operations never move into a subdirectory.
+- **Verb or noun.** In `Domains/Note/`, a verb is an operation and a noun is a collaborator. You can tell which is
+  which from the directory listing.
+- **A Result is a shape.** Seven operations do not need seven result classes; they need four. If you find yourself
+  writing `Results\Show`, stop.
+
+The generators enforce all of it — `php tether make:action Note Archive` puts the file where the table says — and
+`php tether context` reports the conventions as JSON for anything that reads them by machine.
+
 ## Documentation
 
 The [documentation](https://tetherphp.com/docs) covers routing, requests, responders, middleware, services, CRUD and
